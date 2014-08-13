@@ -1,0 +1,25 @@
+{
+  "name": "cheepgl",
+  "description": "cheep opengl like library.",
+  "keywords": [
+    "opengl",
+    "cheepgl"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "js",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "lodash": "*",
+    "gl-matrix": "~2.2.1"
+  }
+}
