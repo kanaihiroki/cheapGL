@@ -3,13 +3,37 @@ var gulp = require('gulp'),
     bower = require('main-bower-files'),
     clean = require("gulp-clean"),
     coffee = require("gulp-coffee"),
-    sourcemaps = require('gulp-sourcemaps');
+    sourcemaps = require('gulp-sourcemaps'),
+	jsDir = './public/js/';
 
-var lib_dir = "public/js/lib";
 
 gulp.task("clean", function() {
     return gulp.src("public/js/**/*", {read: false})
         .pipe(clean());
+});
+
+gulp.task('bower', function() {
+    return gulp.src(bower())
+        .pipe(gulp.dest(jsDir));
+});
+
+gulp.task("ext", function () {
+    return gulp.src("ext/js/*")
+        .pipe(gulp.dest(jsDir));
+});
+
+gulp.task("libs", ["bower", "ext"], function() {
+});
+
+gulp.task('coffee', function() {
+    gulp.src('./src/coffee/**/*.coffee')
+        .pipe(sourcemaps.init())
+        .pipe(coffee())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(jsDir));
+});
+
+gulp.task("build", ["coffee", "libs"], function() {
 });
 
 gulp.task('connect', ["build"],function(){
@@ -20,30 +44,11 @@ gulp.task('connect', ["build"],function(){
     });
 });
 
-gulp.task('bower', function() {
-    return gulp.src(bower())
-        .pipe(gulp.dest(lib_dir));
-});
-
-gulp.task("ext", function () {
-    return gulp.src("ext/js/*")
-        .pipe(gulp.dest(lib_dir));
-});
-
-gulp.task("libs", ["bower", "ext"], function() {
-});
-
-gulp.task('coffee', function() {
-    gulp.src('./src/coffee/*.coffee')
-        .pipe(sourcemaps.init())
-        .pipe(coffee())
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest('./public/js/'))
-});
-
-gulp.task("build", ["coffee"], function() {
+gulp.task("reload", ["build"], function() {
+    gulp.src("public/**/*")
+        .pipe(connect.reload());
 });
 
 gulp.task("default", ["connect"], function() {
-    gulp.watch("src/**/*.js", ["build"]);
+    gulp.watch("src/**/*", ["reload"]);
 });
