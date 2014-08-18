@@ -1,10 +1,11 @@
 define [], () ->
-  class Setting
-    constructor: (
-      canvasElement,
-      stride = 3,
-      vertices = []
-    ) ->
-      @canvasElement = canvasElement
-      @stride = stride
-      @vertices = vertices
+	class Setting
+		constructor: (
+			@vertPath,
+			@fragPath,
+			@vertDisplay,
+			@fragDisplay,
+			@canvasElement,
+			@stride = 3,
+			@vertices = []
+		) ->

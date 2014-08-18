@@ -3,6 +3,7 @@ define [], () ->
 		constructor: (worker) ->
 			@worker = worker
 			@shader = null
+			@mode = null
 
 		loadShader: (shader) ->
 			@send(
@@ -10,11 +11,18 @@ define [], () ->
 				shader: shader
 			)
 
-		process: (attribute) ->
+		process: (mode, attributes) ->
+			@mode = mode
 			@send(
 				method: "process"
-				attribute: attribute
+				attributes: attributes
 			)
+
+		setUniform: (uniforms) ->
+			@send {
+				method: "setUniforms"
+				uniforms: uniforms
+			}
 
 		send: (msg) ->
 			msg["shaderType"] = @shaderType()

@@ -4,6 +4,7 @@ define ["prelude"], (prelude) ->
 			@vertexShader = vert
 			@fragmentShader = frag
 			@attributes = {}
+			@uniforms = {}
 
 		attribute: (attributeName, buffer, stride) ->
 			data = buffer.data
@@ -14,3 +15,5 @@ define ["prelude"], (prelude) ->
 				if !(prelude.empty xn)
 					prelude.splitAt 3, xn
 
+		uniform: (uniformName, data) ->
+			@uniforms[uniformName] = data

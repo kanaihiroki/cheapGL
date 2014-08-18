@@ -57,6 +57,10 @@ define([
 			program = @programs[programId]
 			program.attribute(attributeName, @currentBuffer, stride)
 
+		uniform: (programId, uniformName, data) ->
+			program = @programs[programId]
+			program.uniform(uniformName, data)
+
 		drawArrays: (mode, first, count) ->
 			@shaderUnit.drawArrays(mode, first, count)
 	)

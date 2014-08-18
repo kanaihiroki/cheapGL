@@ -10,6 +10,9 @@ define ["shader/ShaderUnitBase"], (ShaderUnitBase) ->
 		onProcessed: (callback) ->
 			@onProcess = callback
 
+		onMessage: (data) =>
+			@onProcess(data)
+
 		# override
 		shaderType: () ->
 			"VertexShader"

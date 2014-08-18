@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>OpenGLライクなライブラリ サンプル</title>
+	<script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/gl-matrix.js"></script>
     <script type="text/javascript" src="js/require.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
@@ -10,6 +11,21 @@
 <body>
 <h1>OpenGLライクなライブラリ サンプル</h1>
 <canvas id="display" width="800" height="600" style="width: 800; height: 600; background-image: linear-gradient(white, gray);"></canvas>
+<textarea id="vert" cols="80" rows="20"></textarea>
+
+<textarea id="frag" cols="80" rows="20">
+function VertexShader {
+	# uniform変数はfield injectionされる
+	this.mvpMatrix = null
+
+	this.process = function (attribute) {
+		console.log(attribute);
+	}
+}
+
+# 命名規約としてShaderという名前のグローバル変数を使用する
+this.shader = new VertexShader()
+</textarea>
 
 </body>
 </html>
