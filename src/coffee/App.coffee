@@ -1,12 +1,15 @@
 define ["gl", "util"], (gl, util) ->
 	createMVP = (width, height) ->
-		mvp = m = v = p = mat4.create()
+		m = mat4.create()
+		v = mat4.create()
+		p = mat4.create()
+		mvp = mat4.create()
 
 		mat4.lookAt(v, [0.0, 1.0, 3.0], [0, 0, 0], [0, 1, 0])
-		mat4.perspective(p, 90, width / height, 0.1, 100)
+		mat4.perspective(p, Math.PI / 2.0, width / height, 0.1, 100)
 
-		mat4.mul(mvp, m, v)
-		mat4.mul(mvp, mvp, p)
+		mat4.mul(mvp, p, v)
+		mat4.mul(mvp, mvp, m)
 
 	class App
 		@main: (setting) ->
@@ -30,8 +33,7 @@ define ["gl", "util"], (gl, util) ->
 			@setting.vertDisplay.value = @vert
 			@setting.fragDisplay.value = @frag
 
-			# clearColor非対応
-			# @ctx.clearColor(0.0, 0.0, 0.0, 1.0)
+			@ctx.clearColor(1.0, 1.0, 1.0, 1.0)
 			# バッファ指定非対応
 			@ctx.clear()
 			@shaderId = @ctx.createProgram(@vert, @frag)
@@ -51,6 +53,9 @@ define ["gl", "util"], (gl, util) ->
 			# uniformの型は区別しない
 			@ctx.uniform(@shaderId, "mvpMatrix", @mvpMatrix)
 			@ctx.drawArrays(gl.TRIANGLES, 0, @setting.vertices.length / @setting.stride)
+
+			# flush非対応
+			# @ctx.flush()
 
 		send_vertices: (vertices) ->
 			@vboId = @ctx.createBuffer()

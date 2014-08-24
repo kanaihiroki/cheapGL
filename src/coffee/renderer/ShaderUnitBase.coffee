@@ -3,16 +3,17 @@ define [], () ->
 		constructor: (worker) ->
 			@worker = worker
 			@shader = null
-			@mode = null
+			@state = "initialized"
 
 		loadShader: (shader) ->
 			@send(
 				method: "setShader"
+				shaderType: @shaderType()
 				shader: shader
 			)
 
-		process: (mode, attributes) ->
-			@mode = mode
+		process: (attributes) ->
+			@state = "running"
 			@send(
 				method: "process"
 				attributes: attributes
@@ -25,9 +26,7 @@ define [], () ->
 			}
 
 		send: (msg) ->
-			msg["shaderType"] = @shaderType()
 			@worker.postMessage(msg)
 
 		shaderType: () ->
 			throw "call abstract method"
-	

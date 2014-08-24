@@ -3,30 +3,43 @@ define([
 	"Color",
 	"Program",
 	"Buffer",
+	"Renderer",
 	"util",
 	"IllegalArgumentException"
 	], (
 	Color,
 	Program,
 	Buffer,
+	Renderer,
 	util,
 	IllegalArgumentException) ->
 	class Context
-		constructor: (canvasContext, shaderUnit) ->
-			@canvasContext = canvasContext
+		@create: (htmlCanvas) ->
+			canvasImpl = htmlCanvas.getContext("2d")
+
+			width = htmlCanvas.width
+			height = htmlCanvas.height
+	
+			new Context(canvasImpl,
+				Renderer.create(canvasImpl, width, height))
+
+		constructor: (@canvasContext, @renderer) ->
 			@canvas = @canvasContext.canvas
-			@shaderUnit = shaderUnit
 			@programs = []
 			@buffers = []
 			@currentBuffer = null
+			@clearColorStyle = "rgb(0, 0, 0, 1)"
 
 		toString: () ->
 			"cheepGL Context[#{@canvasContext}]"
 
-		clear: () ->
-			@canvasContext.fillStyle = "rgb(0, 0, 0, 1)"
-			@canvasContext.fillRect(0, 0, @canvas.width, @canvas.height)
+		clearColor: (r, g, b, a) ->
+			@clearColorStyle = "rgb(#{r}, #{g}, #{b}, #{a})"
 
+		# 同期的に動作する
+		clear: () ->
+			@renderer.clear(@clearColorStyle)
+	
 		createProgram: (vert, frag) ->
 			if not util.isString(vert)
 				throw new IllegalArgumentException("vert")
@@ -44,7 +57,7 @@ define([
 			return bufferId
 
 		useProgram: (programId) ->
-			@shaderUnit.loadProgram(@programs[programId])
+			@renderer.loadProgram(@programs[programId])
 
 		bindBuffer: (bufferType, bufferId) ->
 			@currentBuffer = @buffers[bufferId]
@@ -62,5 +75,5 @@ define([
 			program.uniform(uniformName, data)
 
 		drawArrays: (mode, first, count) ->
-			@shaderUnit.drawArrays(mode, first, count)
+			@renderer.drawArrays(mode, first, count)
 	)
