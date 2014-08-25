@@ -1,8 +1,6 @@
-define ["prelude"], (prelude) ->
+define ["prelude", "renderer/VertexAttributeStream"], (prelude, VertexAttributeStream) ->
 	class Program
-		constructor: (vert, frag) ->
-			@vertexShader = vert
-			@fragmentShader = frag
+		constructor: (@vertexShader, @fragmentShader) ->
 			@attributes = {}
 			@uniforms = {}
 
@@ -14,6 +12,9 @@ define ["prelude"], (prelude) ->
 			@attributes[attributeName] = prelude.unfold data, (xn) ->
 				if !(prelude.empty xn)
 					prelude.splitAt 3, xn
+
+		vertexAttributeStream: () ->
+			new VertexAttributeStream(@attributes)
 
 		uniform: (uniformName, data) ->
 			@uniforms[uniformName] = data

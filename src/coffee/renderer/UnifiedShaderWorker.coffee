@@ -26,10 +26,9 @@ class UnifiedShaderWorker
 
 	processVertex: (msg) ->
 		attrs = msg.attributes
-		n = attrs.position.length
 
 		# TODO: cleanup
-		processed = for i in [0..n-1]
+		processed = for i in [0..attrs.size-1]
 			args = {}
 			for key, val of attrs
 				args[key] = val[i]

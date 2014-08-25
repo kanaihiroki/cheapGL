@@ -15,13 +15,6 @@ define([
 	Rasterizer
 	) ->
 
-	# 頂点属性配列をピックアップした配列を返す
-	slice = (attributeArrays, packedVertices) ->
-		ret = {}
-		for key of attributeArrays
-			ret[key] = (attributeArrays[key][i] for i in packedVertices)
-		return ret
-
 	getBoundingRect = (position) ->
 		min = (arr) -> prelude.min.apply(this, arr)
 		max = (arr) -> prelude.max.apply(this, arr)
@@ -69,16 +62,17 @@ define([
 		# 配列のコピーを生成しているのでこの部分の処理はかなり重い。
 		# TODO: 型付き配列ビューを使って、コピーしない配列操作を使う
 		drawArrays: (mode, first, count) ->
-			attributeArrays = @program.attributes
+			vas = @program.vertexAttributeStream()
+			# attributeArrays = @program.attributes
 			end = first + count - 1
 
 			# uniform値はドローコールに対して設定されるらしい
 			@vertexShaderUnit.setUniform(@program.uniforms)
 			@fragmentShaderUnit.setUniform(@program.uniforms)
 
-			for packedVertices in primitive.packVertexIndices(mode, first, count)
-				vertexAttributes = slice(attributeArrays, packedVertices)
-				@vertexShaderUnit.process(vertexAttributes)
+			for indexArray in primitive.packVertexIndices(mode, first, count)
+				# vertexAttributes = slice(attributeArrays, indexArray)
+				@vertexShaderUnit.process(vas.slice(indexArray))
 
 		clear: (clearColor) ->
 			@frameBuffer.clear(clearColor)

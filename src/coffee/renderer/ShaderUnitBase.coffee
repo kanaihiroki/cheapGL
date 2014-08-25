@@ -12,11 +12,11 @@ define [], () ->
 				shader: shader
 			)
 
-		process: (attributes) ->
+		process: (vas) ->
 			@state = "running"
 			@send(
 				method: "process"
-				attributes: attributes
+				attributes: vas
 			)
 
 		setUniform: (uniforms) ->
