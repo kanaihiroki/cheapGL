@@ -22,6 +22,7 @@ define(["renderer/Pixel32Array"], (Pixel32Array) ->
 
 		_putPixel: (fragment)->
 			[x,y,z] = fragment.gl_Position
+			y = @height - y # y軸を反転する
 			offset = y * @width + x
 			pixel32Array = new Pixel32Array(@imageData)
 			pixel32Array.setRGBA(offset, fragment.gl_FragColor)

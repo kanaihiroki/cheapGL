@@ -1,13 +1,13 @@
 require.config({
-  baseUrl: "js"
+  # baseUrl: "js"
 })
 
 main = () ->
 	require ["App", "Setting"], (App, Setting) ->
 		setting = new Setting(
 			# シェーダのソースコードのパス
-			"asset/passthrough-vert.js",
-			"asset/passthrough-frag.js"
+			"passthrough-vert.js",
+			"passthrough-frag.js"
 
 			# シェーダ入力欄
 			document.querySelector("#vert"),
@@ -24,6 +24,7 @@ main = () ->
 				0.0, 1.0, 0.0,
 				1.0, 0.0, 0.0,
 				-1.0, 0.0, 0.0,
+				# カリングで消す用
 				# 0.0, 1.0, 0.0,
 				# 1.0, 2.0, 0.0,
 				# -1.0, 2.0, 0.0

@@ -4,51 +4,95 @@ var gulp = require('gulp'),
     clean = require("gulp-clean"),
     coffee = require("gulp-coffee"),
     sourcemaps = require('gulp-sourcemaps'),
-	jsDir = './public/js/';
+    rjs = require('gulp-requirejs'),
+	build = 'build';
 
+function compileCoffee(path) {
+    return gulp.src(path)
+        .pipe(sourcemaps.init())
+        .pipe(coffee())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(build));
+}
 
 gulp.task("clean", function() {
-    return gulp.src("public/js/**/*", {read: false})
+    return gulp.src(["public/**/*", "build"], {read: false})
         .pipe(clean());
 });
 
 gulp.task('bower', function() {
     return gulp.src(bower())
-        .pipe(gulp.dest(jsDir));
+        .pipe(gulp.dest("public"));
 });
 
 gulp.task("ext", function () {
     return gulp.src("ext/js/*")
-        .pipe(gulp.dest(jsDir));
+        .pipe(gulp.dest(build));
 });
 
 gulp.task("libs", ["bower", "ext"], function() {
 });
 
 gulp.task('coffee', function() {
-    gulp.src('./src/coffee/**/*.coffee')
+	return compileCoffee('./src/coffee/**/*.coffee');
+});
+
+gulp.task('worker', function() {
+    return gulp.src("src/worker/**/*.coffee")
         .pipe(sourcemaps.init())
         .pipe(coffee())
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest(jsDir));
+        .pipe(gulp.dest("public"));
 });
 
-gulp.task("build", ["coffee", "libs"], function() {
+gulp.task("build-cheepgl", ["coffee", "worker", "libs"], function() {
+    rjs({
+		name: "gl",
+        baseUrl: build,
+		// mainConfigFile: "build/App.js",
+        out: 'cheepgl.js'})
+		.pipe(gulp.dest('./build'));
 });
 
-gulp.task('connect', ["build"],function(){
-    connect.server({
+gulp.task("compile-example", [], function() {
+	return compileCoffee('./example/src/coffee/**/*.coffee');
+});
+
+gulp.task("copy-example-js", function() {
+	return gulp.src('./example/src/js/**/*.js')
+		.pipe(gulp.dest(build));
+});
+
+gulp.task("copy-example-asset", function() {
+	return gulp.src('./example/asset/**/*')
+		.pipe(gulp.dest("public"));
+});
+
+gulp.task("build-example", ["build-cheepgl", "compile-example", "copy-example-js"], function() {
+    rjs({
+		name: "main",
+        baseUrl: build,
+		// mainConfigFile: "build/App.js",
+        out: 'all.js'})
+		.pipe(gulp.dest('public'));
+});
+
+gulp.task('connect', ["build-example", "copy-example-asset"],function(){
+    return connect.server({
         root: ['public/'],
         port: 8000,
         livereload: true
     });
 });
 
-gulp.task("reload", ["build"], function() {
-    gulp.src("public/**/*")
+gulp.task("reload", ["build-example", "copy-example-asset"], function() {
+    return gulp.src("public/**/*")
         .pipe(connect.reload());
 });
 
-gulp.task("default", ["connect"], function() {
-    gulp.watch("src/**/*", ["reload"]);
+gulp.task("example", ["connect"], function() {
+    return gulp.watch(["src/**/*", "example/**/*"], ["reload"]);
+});
+
+gulp.task("default", ["build-cheepgl"], function() {
 });

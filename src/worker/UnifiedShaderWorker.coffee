@@ -1,5 +1,5 @@
-importScripts("../gl-matrix.js")
-importScripts("../gl-matrix-ext.js")
+importScripts("gl-matrix.js")
+importScripts("gl-matrix-ext.js")
 
 # FragmentShaderと共通かできる?(現実のハードウェアではしている)
 class UnifiedShaderWorker

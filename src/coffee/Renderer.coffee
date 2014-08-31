@@ -32,7 +32,7 @@ define([
 
 	class Renderer
 		# TODO: require.jsに現在のパスを得る方法はあるのだろうか?
-		@UNIFIED_SHADER_WORKER = "js/renderer/UnifiedShaderWorker.js"
+		@UNIFIED_SHADER_WORKER = "UnifiedShaderWorker.js"
 
 		# factory method
 		# このモジュールのオブジェクトの接続を行う
