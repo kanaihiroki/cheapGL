@@ -1,20 +1,20 @@
-require.config({
-  # baseUrl: "js"
-})
-
-main = () ->
+$("#render-button").click(() ->
 	require ["App", "Setting"], (App, Setting) ->
+		select = (query) -> document.querySelector(query)
+		c = select("#controlpanel")
+
 		setting = new Setting(
-			# シェーダのソースコードのパス
-			"passthrough-vert.js",
-			"passthrough-frag.js"
-
-			# シェーダ入力欄
-			document.querySelector("#vert"),
-			document.querySelector("#frag"),
-
 			# Canvas要素
 			document.querySelector('#display'),
+
+			# GUI controls
+			
+			c.vertSource,
+			c.fragSource,
+			c.modelId,
+			c.shaderId,
+			c.ext,
+			c.rotate,
 
 			# 頂点属性の要素数
 			stride = 3,
@@ -31,5 +31,4 @@ main = () ->
 			],
 		)
 		App.main(setting)
-
-window.onload = main
+	)

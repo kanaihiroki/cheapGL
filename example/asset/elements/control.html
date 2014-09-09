@@ -1,0 +1,76 @@
+<link rel="import" href="/lib/polymer/polymer.html">
+<link rel="import" href="/lib/core-ajax/core-ajax.html">
+<link rel="import" href="/lib/core-header-panel/core-header-panel.html">
+<link rel="import" href="/lib/core-toolbar/core-toolbar.html">
+<link rel="import" href="/lib/paper-tabs/paper-tabs.html">
+
+<polymer-element name="cheapgl-controlpanel">
+<template>
+
+<core-ajax url="/menu.json" auto response="{{menu}}"></core-ajax>
+<core-ajax url="/{{menu.vert[shaderId]}}" auto response="{{vertSource}}"></core-ajax>
+<core-ajax url="/{{menu.frag[shaderId]}}" auto response="{{fragSource}}"></core-ajax>
+
+<div id="left">
+
+<textarea id="vert" class="source" cols="80" rows="20">
+{{vertSource}}
+</textarea>
+<textarea id="frag" class="source" cols="80" rows="20">
+{{fragSource}}
+</textarea>
+
+</div> <!-- end left -->
+
+<div id="right">
+
+<table>
+
+<tr>
+<td><label for="select-model">モデル選択</label></td>
+<td id="select-model">
+
+<select value="{{model}}">
+<template repeat="{{modelName, idx in menu.modelName}}">
+<option value="{{idx}}">{{modelName}}</option>
+</template>
+</select>
+
+</td>
+</tr>
+
+
+<tr>
+<td>
+<label for="select-shader">シェーダー選択</label>
+</td>
+
+<td id="select-shader">
+<select value="{{shaderId}}">
+<template repeat="{{shaderName, idx in menu.shaderName}}">
+<option value="{{idx}}">{{shaderName}}</option>
+</template>
+</select>
+</td>
+</tr>
+
+<tr>
+<td><label for="ext">拡大</label></td>
+<td><input type="text" value="1.0" id="ext"></td>
+</tr>
+
+<tr>
+<td><label for="rotate">回転</label></td>
+<td><input type="text" value="1.0" id="rotate"></td>
+</tr>
+</table>
+
+</div> <!-- end right -->
+
+</template>
+
+<script>
+Polymer('cheapgl-controlpanel', {
+});
+</script>
+</polymer-element>

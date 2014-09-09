@@ -3,28 +3,41 @@
 <head>
     <meta charset="utf-8">
     <title>OpenGLライクなライブラリ サンプル</title>
-	<script type="text/javascript" src="jquery.js"></script>
-	<script type="text/javascript" src="gl-matrix.js"></script>
-    <script type="text/javascript" src="require.js" data-main="all"></script>
+	<script type="text/javascript" src="lib/platform/platform.js"></script>
+	<script type="text/javascript" src="lib/jquery/dist/jquery.js"></script>
+	<script type="text/javascript" src="lib/gl-matrix/dist/gl-matrix.js"></script>
+	<link rel="import" href="elements/control.html"></link>
+<style>
+#left {
+		float: left;
+		margin-right: 3em;
+}
+
+#toggle-shader {
+		display: block;
+}
+
+#right {
+
+}
+
+.source {
+		font-size: small;
+}
+</style>
+
 </head>
 <body>
 <h1>OpenGLライクなライブラリ サンプル</h1>
+
 <canvas id="display" width="800" height="600" style="width: 800; height: 600; background-image: linear-gradient(white, gray);"></canvas>
-<textarea id="vert" cols="80" rows="20"></textarea>
 
-<textarea id="frag" cols="80" rows="20">
-function VertexShader {
-	# uniform変数はfield injectionされる
-	this.mvpMatrix = null
+<div>
+<input id="render-button" type="button" value="レンダリング">
+</div>
 
-	this.process = function (attribute) {
-		console.log(attribute);
-	}
-}
+<cheapgl-controlpanel id="controlpanel"></cheapgl-controlpanel>
 
-# 命名規約としてShaderという名前のグローバル変数を使用する
-this.shader = new VertexShader()
-</textarea>
-
+<script type="text/javascript" src="lib/requirejs/require.js" data-main="all"></script>
 </body>
 </html>

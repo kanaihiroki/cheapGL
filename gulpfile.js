@@ -16,13 +16,13 @@ function compileCoffee(path) {
 }
 
 gulp.task("clean", function() {
-    return gulp.src(["public/**/*", "build"], {read: false})
+    return gulp.src(["public", "build"], {read: false})
         .pipe(clean());
 });
 
 gulp.task('bower', function() {
-    return gulp.src(bower())
-        .pipe(gulp.dest("public"));
+    return gulp.src(["bower_components/**/*.js", "bower_components/**/*.html", "bower_components/**/*.js.map", "bower_components/**/*.css"])
+        .pipe(gulp.dest("public/lib"));
 });
 
 gulp.task("ext", function () {
@@ -64,7 +64,7 @@ gulp.task("copy-example-js", function() {
 });
 
 gulp.task("copy-example-asset", function() {
-	return gulp.src('./example/asset/**/*')
+	gulp.src(['./example/asset/**/*.html', "./example/asset/**/*.js", "./example/asset/**/*.json"])
 		.pipe(gulp.dest("public"));
 });
 
@@ -86,7 +86,7 @@ gulp.task('connect', ["build-example", "copy-example-asset"],function(){
 });
 
 gulp.task("reload", ["build-example", "copy-example-asset"], function() {
-    return gulp.src("public/**/*")
+    gulp.src("public/**/*")
         .pipe(connect.reload());
 });
 

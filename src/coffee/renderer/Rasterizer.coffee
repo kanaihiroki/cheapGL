@@ -46,7 +46,6 @@ define([
 		drawTri: (tri) ->
 			[c0, c1, c2] = tri.clippingCoord()
 			[v0, v1, v2] = tri.screenCoords(@width, @height)
-			console.log("screencoord", v0, v1, v2)
 	
 			# Compute triangle bounding box
 			minX = min3(v0[0], v1[0], v2[0]);
@@ -124,7 +123,6 @@ define([
 					0
 				]
 
-			console.log(positions)
 			# TODO: stub
 			{
 				gl_Position: positions

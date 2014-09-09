@@ -4,14 +4,12 @@ define([
 	"Program",
 	"Buffer",
 	"Renderer",
-	"util",
 	"IllegalArgumentException"
 	], (
 	Color,
 	Program,
 	Buffer,
 	Renderer,
-	util,
 	IllegalArgumentException) ->
 	class Context
 		@create: (htmlCanvas) ->
@@ -41,10 +39,10 @@ define([
 			@renderer.clear(@clearColorStyle)
 	
 		createProgram: (vert, frag) ->
-			if not util.isString(vert)
+			if typeof vert isnt "string"
 				throw new IllegalArgumentException("vert")
 
-			if not util.isString(vert)
+			if typeof frag isnt "string"
 				throw new IllegalArgumentException("frag")
 	
 			programId = @programs.length

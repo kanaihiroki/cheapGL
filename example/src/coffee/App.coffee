@@ -21,22 +21,12 @@ define ["gl", "util"], (gl, util) ->
 		constructor: (@setting, @mvpMatrix, @ctx) ->
 			@shaderId = -1
 			@vboId = -1
-			@vert = null
-			@frag = null
 
 		run: ->
-			# シェーダのソースコードを取得する
-			@vert = util.get(@setting.vertPath)
-			@frag = util.get(@setting.fragPath)
-		
-			# シェーダのソースコードを画面に反映する
-			@setting.vertDisplay.value = @vert
-			@setting.fragDisplay.value = @frag
-
 			@ctx.clearColor(1.0, 1.0, 1.0, 1.0)
 			# バッファ指定非対応
 			@ctx.clear()
-			@shaderId = @ctx.createProgram(@vert, @frag)
+			@shaderId = @ctx.createProgram(@setting.vert, @setting.frag)
 			@ctx.useProgram(@shaderId)
 
 			# getAttribLocation は必要なし.vertexAttribPointerで直接指定する
