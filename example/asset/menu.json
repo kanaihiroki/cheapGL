@@ -1,6 +1,4 @@
 {
-	"modelId": ["teapot"],
-	"modelName": ["ティーポット"],
 	"shaderId" : ["passthrough", "phong", "normal-map"],
 	"shaderName": ["パススルーシェーダ", "フォンシェーダ", "法線マッピング"],
 	"vert": ["passthrough-vert.js", "phong-vert.js", "normalmap-vert.js"],

@@ -64,7 +64,7 @@ gulp.task("copy-example-js", function() {
 });
 
 gulp.task("copy-example-asset", function() {
-	gulp.src(['./example/asset/**/*.html', "./example/asset/**/*.js", "./example/asset/**/*.json"])
+	return gulp.src(['./example/asset/**/*.html', "./example/asset/**/*.js", "./example/asset/**/*.json"])
 		.pipe(gulp.dest("public"));
 });
 
@@ -86,12 +86,12 @@ gulp.task('connect', ["build-example", "copy-example-asset"],function(){
 });
 
 gulp.task("reload", ["build-example", "copy-example-asset"], function() {
-    gulp.src("public/**/*")
+    gulp.src("public")
         .pipe(connect.reload());
 });
 
 gulp.task("example", ["connect"], function() {
-    return gulp.watch(["src/**/*", "example/**/*"], ["reload"]);
+    gulp.watch(["src/**/*", "example/**/*"], ["reload"]);
 });
 
 gulp.task("default", ["build-cheepgl"], function() {

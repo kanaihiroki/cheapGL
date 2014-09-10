@@ -18,7 +18,6 @@ define(["renderer/Pixel32Array"], (Pixel32Array) ->
 
 		flush: () ->
 			@canvas.putImageData(@imageData, 0, 0)
-			window.a = @canvas
 
 		_putPixel: (fragment)->
 			[x,y,z] = fragment.gl_Position

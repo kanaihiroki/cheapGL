@@ -27,12 +27,6 @@ define([
 		s = a[0]*b[1] + b[0]*c[1] + c[0]*a[1] - a[1]*b[0] - b[1]*c[0] - c[1]*a[0]
 		Math.abs(s/2)
 
-	# 三角形a,b,cの向きを判定。右向きなら正、左向きなら負の値を返す。
-	# http://yamatyuu.net/computer/program/algorithm/triangle_cross.pdf
-	orient2d = (a, b, c) ->
-		# console.log((b[0]-a[0]), (c[1]-a[1]))
-		(b[0]-a[0])*(c[1]-a[1]) - (b[1]-a[1])*(c[0]-a[0])
-
 	class Rasterize
 		constructor: (@width, @height, @fragmentShaderUnit) ->
 
@@ -40,6 +34,9 @@ define([
 			tri = new Triangle(attributes)
 
    			# TODO: カリング
+			if !tri.isFront()
+				return
+
 			fragments = @drawTri(tri)
 			@fragmentShaderUnit.process(fragments)
 

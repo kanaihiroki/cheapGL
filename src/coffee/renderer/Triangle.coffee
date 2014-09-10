@@ -8,7 +8,7 @@ define [], () ->
 
 		clippingCoord: () ->
 			attr.gl_Position for attr in @attributes
-			
+
 		# クリッピング座標から正規化デバイス座標を計算
 		# 同次座標のwで割る(斉次座標に置き換えるということ)
 		# http://oshiro.bpe.es.osaka-u.ac.jp/people/staff/imura/computer/OpenGL/coordinates/disp_content
@@ -25,6 +25,12 @@ define [], () ->
 					Math.floor(v[1]*height + height/2),
 					0
 				]
+
+		# 三角形a,b,cの向きを判定。
+		# http://yamatyuu.net/computer/program/algorithm/triangle_cross.pdf
+		isFront: () ->
+			[a,b,c,d] = @clippingCoord()
+			(b[0]-a[0])*(c[1]-a[1]) - (b[1]-a[1])*(c[0]-a[0]) < 0
 
 		getVector4Attributes: () ->
 			ret = {}

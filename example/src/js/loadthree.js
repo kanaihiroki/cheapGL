@@ -1,7 +1,7 @@
-require([], function() {
+define([], function() {
 return function(json) {
 
-    if ( json.metadata === undefined || json.metadata.formatVersion === undefined || json.metadata.formatVersion !== 3 ) {
+    if ( json.metadata === undefined || json.metadata.formatVersion === undefined || json.metadata.formatVersion !== 3.1 ) {
 
         console.error( 'Deprecated file format.' );
         return;

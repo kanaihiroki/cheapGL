@@ -1,4 +1,4 @@
-define ["gl", "util"], (gl, util) ->
+define ["gl", "util", "loadthree"], (gl, util, loadthree) ->
 	createMVP = (width, height) ->
 		m = mat4.create()
 		v = mat4.create()
@@ -16,13 +16,17 @@ define ["gl", "util"], (gl, util) ->
 			c = setting.canvasElement
 			mvpMatrix = createMVP(c.width, c.height)
 			ctx = gl.getContext(c)
-			new App(setting, mvpMatrix, ctx).run()
+			loader = new THREE.JSONLoader()
+			new App(setting, mvpMatrix, ctx, loader).run()
 
-		constructor: (@setting, @mvpMatrix, @ctx) ->
+		constructor: (@setting, @mvpMatrix, @ctx, @loader) ->
 			@shaderId = -1
 			@vboId = -1
 
 		run: ->
+			@loader.load(@setting.modelPath, @render)
+
+		render: (geometry, args) =>
 			@ctx.clearColor(1.0, 1.0, 1.0, 1.0)
 			# バッファ指定非対応
 			@ctx.clear()
@@ -33,6 +37,7 @@ define ["gl", "util"], (gl, util) ->
 			# attLocation = @ctx.getAttribLocation(@shaderId, 'position');
 
 			@send_vertices(@setting.vertices)
+			# @send_vertices(geometry.vertices)
 			
 			# attribute属性は常に有効とする
 			# ctx.enableVertexAttribArray(attLocation);
@@ -42,6 +47,7 @@ define ["gl", "util"], (gl, util) ->
 
 			# uniformの型は区別しない
 			@ctx.uniform(@shaderId, "mvpMatrix", @mvpMatrix)
+			@ctx.uniform(@shaderId, "color", vec4.fromValues(1.0, 1.0, 0.0, 1.0))
 			@ctx.drawArrays(gl.TRIANGLES, 0, @setting.vertices.length / @setting.stride)
 
 			# flush非対応

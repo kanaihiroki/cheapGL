@@ -24,6 +24,7 @@
     "requirejs": "~2.1.14",
     "jquery": "~2.1.1",
     "polymer": "Polymer/polymer#~0.4.0",
-    "paper-elements": "Polymer/paper-elements#~0.4.0"
+    "paper-elements": "Polymer/paper-elements#~0.4.0",
+    "threejs": "*"
   }
 }

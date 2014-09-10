@@ -8,6 +8,7 @@
 <template>
 
 <core-ajax url="/menu.json" auto response="{{menu}}"></core-ajax>
+<core-ajax url="../models.json" auto response="{{models}}"></core-ajax>
 <core-ajax url="/{{menu.vert[shaderId]}}" auto response="{{vertSource}}"></core-ajax>
 <core-ajax url="/{{menu.frag[shaderId]}}" auto response="{{fragSource}}"></core-ajax>
 
@@ -28,11 +29,12 @@
 
 <tr>
 <td><label for="select-model">モデル選択</label></td>
-<td id="select-model">
+<td>
 
-<select value="{{model}}">
-<template repeat="{{modelName, idx in menu.modelName}}">
-<option value="{{idx}}">{{modelName}}</option>
+<select value="{{modelPath}}">
+<template repeat="{{model in models}}">
+<option></option>
+<option value="{{model.path}}">{{model.name}}</option>
 </template>
 </select>
 
@@ -45,7 +47,7 @@
 <label for="select-shader">シェーダー選択</label>
 </td>
 
-<td id="select-shader">
+<td>
 <select value="{{shaderId}}">
 <template repeat="{{shaderName, idx in menu.shaderName}}">
 <option value="{{idx}}">{{shaderName}}</option>

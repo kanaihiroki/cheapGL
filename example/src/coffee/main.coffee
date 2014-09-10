@@ -7,12 +7,9 @@ $("#render-button").click(() ->
 			# Canvas要素
 			document.querySelector('#display'),
 
-			# GUI controls
-			
 			c.vertSource,
 			c.fragSource,
-			c.modelId,
-			c.shaderId,
+			c.modelPath,
 			c.ext,
 			c.rotate,
 
@@ -25,9 +22,9 @@ $("#render-button").click(() ->
 				1.0, 0.0, 0.0,
 				-1.0, 0.0, 0.0,
 				# カリングで消す用
-				# 0.0, 1.0, 0.0,
-				# 1.0, 2.0, 0.0,
-				# -1.0, 2.0, 0.0
+				0.0, 1.0, 0.0,
+				1.0, 2.0, 0.0,
+				-1.0, 2.0, 0.0
 			],
 		)
 		App.main(setting)
