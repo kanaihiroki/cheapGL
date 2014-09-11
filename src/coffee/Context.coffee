@@ -66,7 +66,7 @@ define([
 
 		vertexAttribPointer: (programId, attributeName, stride) ->
 			program = @programs[programId]
-			program.attribute(attributeName, @currentBuffer, stride)
+			program.bindBuffer(attributeName, @currentBuffer, stride)
 
 		uniform: (programId, uniformName, data) ->
 			program = @programs[programId]

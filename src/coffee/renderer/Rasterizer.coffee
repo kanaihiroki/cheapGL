@@ -1,10 +1,8 @@
 define([
 	"prelude",
-	"primitive",
 	"renderer/Triangle"
 ], (
 	prelude,
-	primitive,
 	Triangle
 	) ->
 	# short hand

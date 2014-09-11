@@ -1,17 +1,10 @@
 define ["prelude", "renderer/VertexAttributeStream"], (prelude, VertexAttributeStream) ->
 	class Program
-		constructor: (@vertexShader, @fragmentShader) ->
-			@attributes = {}
+		constructor: (@vertexShader, @fragmentShader, @attributeStream = new VertexAttributeStream()) ->
 			@uniforms = {}
 
-		attribute: (attributeName, buffer, stride) ->
-			data = buffer.data
-			if data.length % stride isnt 0
-				throw "array length is not multiple of stride"
-		
-			@attributes[attributeName] = prelude.unfold data, (xn) ->
-				if !(prelude.empty xn)
-					prelude.splitAt 3, xn
+		bindBuffer: (attributeName, buffer, stride) ->
+			@attributeStream.attribute(attributeName, buffer.data, stride)
 
 		vertexAttributeStream: () ->
 			new VertexAttributeStream(@attributes)

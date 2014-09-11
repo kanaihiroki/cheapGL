@@ -44,7 +44,6 @@ define ["gl", "util", "loadthree"], (gl, util, loadthree) ->
 			# attLocation = @ctx.getAttribLocation(@shaderId, 'position');
 			vertexVbo = @sendVertices(@setting.vertices)
 			colorVbo = @sendVertices(@setting.colors)
-	
 			# @sendVertices(geometry.vertices)
 
 					

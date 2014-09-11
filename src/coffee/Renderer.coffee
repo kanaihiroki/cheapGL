@@ -1,34 +1,15 @@
 # Renderer.coffee - シェーダーによるレンダリングパイプラインの実装
 define([
-	"prelude",
-	"primitive",
 	"renderer/VertexShaderUnit",
 	"renderer/FragmentShaderUnit",
 	"renderer/FrameBuffer",
 	"renderer/Rasterizer"
 ], (
-	prelude,
-	primitive,
 	VertexShaderUnit,
 	FragmentShaderUnit,
 	FrameBuffer,
 	Rasterizer
 	) ->
-
-	getBoundingRect = (position) ->
-		min = (arr) -> prelude.min.apply(this, arr)
-		max = (arr) -> prelude.max.apply(this, arr)
-		xs = (p[0] for p in position)
-		ys = (p[1] for p in position)
-		x_min = min(xs)
-		y_min = min(ys)
-		x_max = max(xs)
-		y_max = max(ys)
-		top_left = [x_min, y_max]
-		top_right = [x_max, y_max]
-		bottom_left = [x_min, y_min]
-		bottom_right = [x_max, y_min]
-		return [top_left, top_right, bottom_right, bottom_left]
 
 	class Renderer
 		# TODO: require.jsに現在のパスを得る方法はあるのだろうか?
@@ -50,9 +31,6 @@ define([
 		constructor: (@vertexShaderUnit, @fragmentShaderUnit, @frameBuffer) ->
 			@program = null
 
-		toString: ->
-			"ShaderUnit[#{@program}]"
-
 		loadProgram: (@program) ->
 			@vertexShaderUnit.loadShader(@program.vertexShader)
 			@fragmentShaderUnit.loadShader(@program.fragmentShader)
@@ -64,14 +42,12 @@ define([
 		# 配列のコピーを生成しているのでこの部分の処理は重いはず。
 		# TODO: 型付き配列ビューを使って、コピーしない配列操作を使う
 		drawArrays: (mode, first, count) ->
-			vas = @program.vertexAttributeStream()
-			# attributeArrays = @program.attributes
 			end = first + count - 1
 
 			# uniform値はドローコールに対して設定されるらしい
 			@vertexShaderUnit.setUniform(@program.uniforms)
 			@fragmentShaderUnit.setUniform(@program.uniforms)
 
-			for indices in primitive.packVertexIndices(mode, first, count)
-				@vertexShaderUnit.process(vas.slice(indices))
+			for primitive in @program.attributeStream.getPrimitiveArray(mode, first, count)
+				@vertexShaderUnit.process(primitive)
 	)
