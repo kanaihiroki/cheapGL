@@ -5,4 +5,5 @@ define ["Constants", "IllegalArgumentException"], (Constants, IllegalArgumentExc
 		switch mode
 			when Constants.TRIANGLES
 				[i*3, i*3+1, i*3+2] for i in [first..end/3]
-			else throw new IllegalArgumentException("mode")
+			else
+				throw new IllegalArgumentException("mode")

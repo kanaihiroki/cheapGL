@@ -21,7 +21,6 @@ define ["gl", "util", "loadthree"], (gl, util, loadthree) ->
 
 		constructor: (@setting, @mvpMatrix, @ctx, @loader) ->
 			@shaderId = -1
-			@vboId = -1
 
 		run: ->
 			@loader.load(@setting.modelPath, @render)
@@ -30,30 +29,43 @@ define ["gl", "util", "loadthree"], (gl, util, loadthree) ->
 			@ctx.clearColor(1.0, 1.0, 1.0, 1.0)
 			# バッファ指定非対応
 			@ctx.clear()
+
+			# シェーダ登録
 			@shaderId = @ctx.createProgram(@setting.vert, @setting.frag)
 			@ctx.useProgram(@shaderId)
 
-			# getAttribLocation は必要なし.vertexAttribPointerで直接指定する
-			# attLocation = @ctx.getAttribLocation(@shaderId, 'position');
-
-			@send_vertices(@setting.vertices)
-			# @send_vertices(geometry.vertices)
-			
-			# attribute属性は常に有効とする
-			# ctx.enableVertexAttribArray(attLocation);
-			
-			# attribute属性を登録
-			@ctx.vertexAttribPointer(@shaderId, "position", @setting.stride)
-
+			# uniform登録
 			# uniformの型は区別しない
 			@ctx.uniform(@shaderId, "mvpMatrix", @mvpMatrix)
 			@ctx.uniform(@shaderId, "color", vec4.fromValues(1.0, 1.0, 0.0, 1.0))
+
+			# 頂点属性をVBOにする
+			# getAttribLocation は必要なし.vertexAttribPointerで直接指定する
+			# attLocation = @ctx.getAttribLocation(@shaderId, 'position');
+			vertexVbo = @sendVertices(@setting.vertices)
+			colorVbo = @sendVertices(@setting.colors)
+	
+			# @sendVertices(geometry.vertices)
+
+					
+			# attribute属性にVBOを登録
+			@ctx.bindBuffer(gl.ARRAY_BUFFER, vertexVbo);
+			# ctx.enableVertexAttribArray(attLocation); # attribute属性は常に有効とする
+			@ctx.vertexAttribPointer(@shaderId, "position", 3)
+
+			@ctx.bindBuffer(gl.ARRAY_BUFFER, colorVbo);
+			# ctx.enableVertexAttribArray(attLocation); # attribute属性は常に有効とする
+			@ctx.vertexAttribPointer(@shaderId, "color", 4)
+
+			# レンダリング
 			@ctx.drawArrays(gl.TRIANGLES, 0, @setting.vertices.length / @setting.stride)
 
 			# flush非対応
 			# @ctx.flush()
 
-		send_vertices: (vertices) ->
-			@vboId = @ctx.createBuffer()
-			@ctx.bindBuffer(gl.ARRAY_BUFFER, @vboId);
-			@ctx.bufferData(gl.ARRAY_BUFFER, vertices);
+		sendVertices: (data) ->
+			vboId = @ctx.createBuffer()
+			@ctx.bindBuffer(gl.ARRAY_BUFFER, vboId);
+			@ctx.bufferData(gl.ARRAY_BUFFER, data);
+			return vboId
+			

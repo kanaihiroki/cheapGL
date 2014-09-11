@@ -53,13 +53,15 @@ define([
 		toString: ->
 			"ShaderUnit[#{@program}]"
 
-		loadProgram: (program) ->
-			@program = program
+		loadProgram: (@program) ->
 			@vertexShaderUnit.loadShader(@program.vertexShader)
 			@fragmentShaderUnit.loadShader(@program.fragmentShader)
 
+		clear: (clearColor) ->
+			@frameBuffer.clear(clearColor)
+
 		# OpenGL本来の処理と違って
-		# 配列のコピーを生成しているのでこの部分の処理はかなり重い。
+		# 配列のコピーを生成しているのでこの部分の処理は重いはず。
 		# TODO: 型付き配列ビューを使って、コピーしない配列操作を使う
 		drawArrays: (mode, first, count) ->
 			vas = @program.vertexAttributeStream()
@@ -70,10 +72,6 @@ define([
 			@vertexShaderUnit.setUniform(@program.uniforms)
 			@fragmentShaderUnit.setUniform(@program.uniforms)
 
-			for indexArray in primitive.packVertexIndices(mode, first, count)
-				# vertexAttributes = slice(attributeArrays, indexArray)
-				@vertexShaderUnit.process(vas.slice(indexArray))
-
-		clear: (clearColor) ->
-			@frameBuffer.clear(clearColor)
+			for indices in primitive.packVertexIndices(mode, first, count)
+				@vertexShaderUnit.process(vas.slice(indices))
 	)

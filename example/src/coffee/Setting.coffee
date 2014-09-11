@@ -8,7 +8,8 @@ define ["util"], (util) ->
 			@ext,
 			@rotate,
 			@stride = 3,
-			@vertices = []
+			@vertices = [],
+			@colors = []
 		) ->
 			util.checkNull for arg in arguments
 			
