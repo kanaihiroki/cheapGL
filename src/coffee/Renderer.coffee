@@ -23,12 +23,14 @@ define([
 			frameBuffer = new FrameBuffer(canvasImpl)
 			fragmentShaderUnit = new FragmentShaderUnit(fragWorker, frameBuffer)
 			rasterizer = new Rasterizer(width, height, fragmentShaderUnit)
-			vertexShaderUnit = new VertexShaderUnit(vertWorker, rasterizer)
+			vertexShaderUnit = new VertexShaderUnit(vertWorker)
 			vertWorker.addEventListener("message", vertexShaderUnit.onMessage)
 			fragWorker.addEventListener("message", fragmentShaderUnit.onMessage)
-			new Renderer(vertexShaderUnit, fragmentShaderUnit, frameBuffer)
+			renderer = new Renderer(vertexShaderUnit, fragmentShaderUnit, frameBuffer, rasterizer)
+			vertexShaderUnit.vertexProcessed(renderer.onVertexProcessed)
+			return renderer
 		
-		constructor: (@vertexShaderUnit, @fragmentShaderUnit, @frameBuffer) ->
+		constructor: (@vertexShaderUnit, @fragmentShaderUnit, @frameBuffer, @rasterizer) ->
 			@program = null
 
 		loadProgram: (@program) ->
@@ -48,6 +50,12 @@ define([
 			@vertexShaderUnit.setUniform(@program.uniforms)
 			@fragmentShaderUnit.setUniform(@program.uniforms)
 
+			# 非同期処理を使っている関係で、頂点ごとに分けて渡すよりも
+			# プリミティブを丸ごと送った方がよい
+			# 頂点シェーダを通した後のプリミティブの再構築がめんどくさそうなのて
 			for primitive in @program.attributeStream.getPrimitiveArray(mode, first, count)
 				@vertexShaderUnit.process(primitive)
+
+		onVertexProcessed: (primitive) =>
+				@rasterizer.process(primitive)
 	)

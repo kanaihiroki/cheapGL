@@ -2,8 +2,6 @@ define [], () ->
 	class ShaderUnitBase
 		constructor: (worker) ->
 			@worker = worker
-			@shader = null
-			@state = "initialized"
 
 		loadShader: (shader) ->
 			@send(
@@ -12,12 +10,8 @@ define [], () ->
 				shader: shader
 			)
 
-		process: (vas) ->
-			@state = "running"
-			@send(
-				method: "process"
-				attributes: vas
-			)
+		process: ->
+			throw "can not call abstract method"
 
 		setUniform: (uniforms) ->
 			@send {
@@ -29,4 +23,4 @@ define [], () ->
 			@worker.postMessage(msg)
 
 		shaderType: () ->
-			throw "call abstract method"
+			throw "can not call abstract method"

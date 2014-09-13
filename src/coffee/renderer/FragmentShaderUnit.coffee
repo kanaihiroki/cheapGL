@@ -6,6 +6,12 @@ define ["renderer/ShaderUnitBase"], (ShaderUnitBase) ->
 		onMessage: (msg) =>
 			@frameBuffer.write(msg.data)
 
+		process: (fragment) ->
+			@send(
+				method: "process"
+				attributes: fragment
+			)
+
 		# override
 		shaderType: () ->
 			"FragmentShader"
