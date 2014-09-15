@@ -1,4 +1,4 @@
-define(["renderer/Pixel32Array"], (Pixel32Array) ->
+define([], () ->
 	class FrameBuffer
 		constructor: (@canvas) ->
 			@width = @canvas.canvas.width
@@ -21,8 +21,14 @@ define(["renderer/Pixel32Array"], (Pixel32Array) ->
 
 		_putPixel: (fragment)->
 			[x,y,z] = fragment.gl_Position
+			data = @imageData.data
+			rgba = (a*255 for a in fragment.gl_FragColor)
+
 			y = @height - y # y軸を反転する
+
 			offset = y * @width + x
-			pixel32Array = new Pixel32Array(@imageData)
-			pixel32Array.setRGBA(offset, fragment.gl_FragColor)
+			byteOffset = offset * 4
+
+			for i in [0..3]
+				@imageData.data[byteOffset + i] = rgba[i]
 )

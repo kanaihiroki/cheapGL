@@ -73,6 +73,9 @@
 
 <script>
 Polymer('cheapgl-controlpanel', {
+	modelsChanged: function() {
+		this.modelPath = "monkey.json";
+	}
 });
 </script>
 </polymer-element>

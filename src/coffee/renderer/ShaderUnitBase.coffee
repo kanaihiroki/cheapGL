@@ -2,6 +2,13 @@ define [], () ->
 	class ShaderUnitBase
 		constructor: (worker) ->
 			@worker = worker
+			@onProcessedHandler = () ->
+				throw "invalid state"
+
+		onMessage: (msg) =>
+			@onProcessedHandler(msg.data)
+
+		onProcessed: (@onProcessedHandler) ->
 
 		loadShader: (shader) ->
 			@send(

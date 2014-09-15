@@ -21,13 +21,14 @@ define([
 			vertWorker = new Worker(@UNIFIED_SHADER_WORKER)
 			fragWorker = new Worker(@UNIFIED_SHADER_WORKER)
 			frameBuffer = new FrameBuffer(canvasImpl)
-			fragmentShaderUnit = new FragmentShaderUnit(fragWorker, frameBuffer)
+			fragmentShaderUnit = new FragmentShaderUnit(fragWorker)
 			rasterizer = new Rasterizer(width, height, fragmentShaderUnit)
 			vertexShaderUnit = new VertexShaderUnit(vertWorker)
 			vertWorker.addEventListener("message", vertexShaderUnit.onMessage)
 			fragWorker.addEventListener("message", fragmentShaderUnit.onMessage)
 			renderer = new Renderer(vertexShaderUnit, fragmentShaderUnit, frameBuffer, rasterizer)
-			vertexShaderUnit.vertexProcessed(renderer.onVertexProcessed)
+			vertexShaderUnit.onProcessed(renderer.onVertexProcessed)
+			fragmentShaderUnit.onProcessed(renderer.onFragmentProcessed)
 			return renderer
 		
 		constructor: (@vertexShaderUnit, @fragmentShaderUnit, @frameBuffer, @rasterizer) ->
@@ -57,5 +58,10 @@ define([
 				@vertexShaderUnit.process(primitive)
 
 		onVertexProcessed: (primitive) =>
-				@rasterizer.process(primitive)
+				fragments = @rasterizer.rasterize(primitive)
+				if fragments?.gl_Position?.length > 0
+					@fragmentShaderUnit.process(fragments)
+
+		onFragmentProcessed: (fragments) =>
+				@frameBuffer.write(fragments)
 	)

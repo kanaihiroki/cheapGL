@@ -1,8 +1,8 @@
 function FragmentShader() {
-	this.main = function() {
+	this.main = function(fragment) {
 		return {
-			// gl_FragColor: vec4.fromValues(1.0, 1.0, 0.0, 1.0)
-			gl_FragColor: this.color
+			gl_FragColor: fragment.gl_Color
+			// gl_FragColor: this.color
 		};
 	};
 }
