@@ -8,6 +8,7 @@ define([], () ->
 		write: (fragments) ->
 			@imageData = @canvas.getImageData(0,0, @width, @height)
 			for fragment in fragments
+				@_transformCanvasCoord(fragment)
 				@_putPixel(fragment)
 		
 			@flush()
@@ -31,4 +32,9 @@ define([], () ->
 
 			for i in [0..3]
 				@imageData.data[byteOffset + i] = rgba[i]
+
+		# 最後にスクリーン座標をCanvasの座標に変換する
+		_transformCanvasCoord: (fragment) ->
+			[x,y,z] = fragment.gl_Position
+			fragment.gl_Position = [x + @width / 2, y + @height / 2]
 )

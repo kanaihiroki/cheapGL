@@ -16,19 +16,26 @@ define [
 		return ret
 	scale4 = (a,b) -> vec4.scale(vec4.create(), a, b)
 
+	# 透視除算
 	# クリッピング座標から正規化デバイス座標を計算
-	# 同次座標のwで割る(斉次座標に置き換えるということ)
 	# http://oshiro.bpe.es.osaka-u.ac.jp/people/staff/imura/computer/OpenGL/coordinates/disp_content
 	# http://qpp.bitbucket.org/translation/maximizing_depth_buffer_range_and/
-	getNormalizedDeviceCoord = ([a,b,c,d]) ->
+	perspectiveDivision = ([a,b,c,d]) ->
 		[a/d, b/d, c/d]
 
 	# ビューポート変換
-	# TODO: zの扱い
+	# 正規化デバイス座標からスクリーン座標を計算
+	# TODO: スクリーン座標系の扱いが間違っている
+	# 座標形の原点は画面中央部。修正すること
 	viewportTransform = (width, height, [x,y,z]) ->
+		# [
+		# 	Math.floor(x*width + width/2),
+		# 	Math.floor(y*height + height/2),
+		# 	0
+		# ]
 		[
-			Math.floor(x*width + width/2),
-			Math.floor(y*height + height/2),
+			Math.floor(x*width/2),
+			Math.floor(y*height/2),
 			0
 		]
 
@@ -39,13 +46,12 @@ define [
 		Math.abs(s/2)
 
 	class Triangle
-
 		constructor: (@primitive, @width, @height) ->
 			if 3 != @primitive.length
 				throw new "attributeArray length error"
 
 			@c = @getClippingCoord()
-			@ndc = (getNormalizedDeviceCoord(v) for v in @c)
+			@ndc = (perspectiveDivision(v) for v in @c)
 			@s = (viewportTransform(@width, @height, v) for v in @ndc)
 
 			# 三角形に外接する長方形の座標
@@ -71,11 +77,20 @@ define [
 
 			# 補完されたクリップ座標をウィンドウ座標に変換する
 			for fragment in fragments
-				fragment.gl_Position = viewportTransform(@width, @height, getNormalizedDeviceCoord(fragment.gl_Position))
+				fragment.gl_Position = viewportTransform(@width, @height,
+						perspectiveDivision(fragment.gl_Position))
 
 			ret = {}
 			for name of @primitive[0]
 				ret[name] = prelude.map(fragments, (f) -> f[name])
+			return ret
+
+		isInsideViewFrustrum: ->
+			ret = prelude.any(@c, (c) ->
+				-c[3] < c[0] and c[0] < c[3] and
+				-c[3] < c[1] and c[1] < c[3] and
+				-c[3] < c[2] and c[2] < c[3]
+			)
 			return ret
 
 		getClippingCoord: () ->
@@ -89,10 +104,10 @@ define [
 			maxY = max3(@s[0][1], @s[1][1], @s[2][1])
 
 			# Clip against screen bounds
-			minX = max(Math.floor(minX), 0)
-			minY = max(Math.floor(minY), 0)
-			maxX = min(Math.floor(maxX), @width)
-			maxY = min(Math.floor(maxY), @height)
+			minX = max(Math.floor(minX), -@width/2)
+			minY = max(Math.floor(minY), -@height/2)
+			maxX = min(Math.floor(maxX), @width/2)
+			maxY = min(Math.floor(maxY), @height/2)
 			return [minX, minY, maxX, maxY]
 
 		# 三角形a,b,cの向きを判定。

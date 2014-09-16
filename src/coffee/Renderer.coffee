@@ -58,7 +58,9 @@ define([
 				@vertexShaderUnit.process(primitive)
 
 		onVertexProcessed: (primitive) =>
+				# console.log(primitive)
 				fragments = @rasterizer.rasterize(primitive)
+				# console.log(fragments)
 				if fragments?.gl_Position?.length > 0
 					@fragmentShaderUnit.process(fragments)
 

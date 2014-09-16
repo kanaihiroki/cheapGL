@@ -15,5 +15,8 @@ define([
 			if !tri.isFront()
 				return
 
+			if !tri.isInsideViewFrustrum()
+				return
+
 			tri.rasterize()
 )
