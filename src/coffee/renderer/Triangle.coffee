@@ -25,18 +25,15 @@ define [
 
 	# ビューポート変換
 	# 正規化デバイス座標からスクリーン座標を計算
-	# TODO: スクリーン座標系の扱いが間違っている
-	# 座標形の原点は画面中央部。修正すること
-	viewportTransform = (width, height, [x,y,z]) ->
-		# [
-		# 	Math.floor(x*width + width/2),
-		# 	Math.floor(y*height + height/2),
-		# 	0
-		# ]
+	viewportTransform = ([x,y,z], width, height, near, far) ->
+		# TODO
+		near = 0.1
+		far = 100
+
 		[
 			Math.floor(x*width/2),
 			Math.floor(y*height/2),
-			0
+			Math.floor(z*(far - near)/2 + (far + near)/2)
 		]
 
 	# 頂点a,b,cに囲まれた面積を計算する。
@@ -52,7 +49,7 @@ define [
 
 			@c = @getClippingCoord()
 			@ndc = (perspectiveDivision(v) for v in @c)
-			@s = (viewportTransform(@width, @height, v) for v in @ndc)
+			@s = (viewportTransform(v, @width, @height) for v in @ndc)
 
 			# 三角形に外接する長方形の座標
 			[@minX, @minY, @maxX, @maxY] = @getBoundingRect()
@@ -77,8 +74,8 @@ define [
 
 			# 補完されたクリップ座標をウィンドウ座標に変換する
 			for fragment in fragments
-				fragment.gl_Position = viewportTransform(@width, @height,
-						perspectiveDivision(fragment.gl_Position))
+				ndc = perspectiveDivision(fragment.gl_Position)
+				fragment.gl_Position = viewportTransform(ndc, @width, @height)
 
 			ret = {}
 			for name of @primitive[0]

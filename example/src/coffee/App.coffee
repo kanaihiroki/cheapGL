@@ -1,12 +1,12 @@
 define ["prelude", "gl", "util", "ext/ThreeJSLoader"], (prelude, gl, util, ThreeJSLoader) ->
-	createMVP = (width, height) ->
+	createMVP = (width, height, near, far) ->
 		m = mat4.create()
 		v = mat4.create()
 		p = mat4.create()
 		mvp = mat4.create()
 
 		mat4.lookAt(v, [0.0, 0.0, 3.0], [0, 0, 0], [0, 1, 0])
-		mat4.perspective(p, Math.PI / 2.0, width / height, 0.1, 100)
+		mat4.perspective(p, Math.PI / 2.0, width / height, near, far)
 
 		mat4.mul(mvp, p, v)
 		mat4.mul(mvp, mvp, m)
@@ -14,7 +14,7 @@ define ["prelude", "gl", "util", "ext/ThreeJSLoader"], (prelude, gl, util, Three
 	class App
 		@main: (setting) ->
 			c = setting.canvasElement
-			mvpMatrix = createMVP(c.width, c.height)
+			mvpMatrix = createMVP(c.width, c.height, setting.near, setting.far)
 			ctx = gl.getContext(c)
 			new App(setting, mvpMatrix, ctx, new ThreeJSLoader()).run()
 

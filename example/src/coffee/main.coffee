@@ -13,6 +13,9 @@ $("#render-button").click(() ->
 			c.ext,
 			c.rotate,
 
+			0.1,
+			100,
+
 			# 頂点属性の要素数
 			stride = 3,
 
