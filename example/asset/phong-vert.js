@@ -1,6 +1,7 @@
 // フォンシェーダ実装
 function VertexShader() {
 	this.mvpMatrix = null;
+    this.color = null;
 
 	this.main = function (vertex) {
 		// console.log(vertex.normal);
@@ -8,7 +9,7 @@ function VertexShader() {
 		vec4.transformMat4(pos, pos, this.mvpMatrix);
 
 		return {
-			gl_Color: vertex.color,
+			gl_Color: this.color,
 			gl_Position: pos
 		};
 	};

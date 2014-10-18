@@ -8,10 +8,10 @@
 <polymer-element name="cheapgl-controlpanel">
 <template>
 
-<core-ajax url="/shaders.json" auto response="{{shaders}}"></core-ajax>
+<core-ajax url="../shaders.json" auto response="{{shaders}}"></core-ajax>
 <core-ajax url="../models.json" auto response="{{models}}"></core-ajax>
-<core-ajax url="/{{vertShader}}" auto response="{{vertSource}}"></core-ajax>
-<core-ajax url="/{{fragShader}}" auto response="{{fragSource}}"></core-ajax>
+<core-ajax url="../app/{{vertShader}}" auto response="{{vertSource}}"></core-ajax>
+<core-ajax url="../app/{{fragShader}}" auto response="{{fragSource}}"></core-ajax>
 
 <div id="left">
 
