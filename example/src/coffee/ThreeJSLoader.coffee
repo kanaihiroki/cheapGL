@@ -18,10 +18,18 @@ define ["prelude"], (prelude) ->
 
         _onLoad: (callback) ->
             (geometry, materials) =>
+                # geometry = new THREE.TorusGeometry( 10, 3, 16, 100 )
+                geometry = new THREE.TorusGeometry(1, 0.3 ,16 ,100)
                 loadContext = new LoadContext(geometry, materials)
 
                 window.a = geometry
                 window.b = materials
+
+
+                # for uvs in geometry.faceVertexUvs[0]
+                #     console.log("---------------")
+                #     for uv in uvs
+                #         console.log(uv)
 
                 callback({
                     vertices: loadContext.createVertexArray()

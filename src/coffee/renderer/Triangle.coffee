@@ -109,6 +109,7 @@ define [
 
         # 三角形a,b,cの向きを判定。
         # http://yamatyuu.net/computer/program/algorithm/triangle_cross.pdf
+        # TODO: バグがあるっぽい
         isFront: ->
             [a,b,c] = @c
             (b[0]-a[0])*(c[1]-a[1]) - (b[1]-a[1])*(c[0]-a[0]) < 0

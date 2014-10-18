@@ -12,8 +12,8 @@ define([
 		rasterize: (primitive) =>
 			tri = new Triangle(primitive, @width, @height)
 
-			if !tri.isFront()
-				return
+			# if !tri.isFront()
+			# 	return
 
 			if !tri.isInsideViewFrustrum()
 				return
