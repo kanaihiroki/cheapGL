@@ -39,7 +39,7 @@ define ["prelude", "gl", "util", "ThreeJSLoader"], (prelude, gl, util, ThreeJSLo
             # uniform登録
             # uniformの型は区別しない
             @ctx.uniform(@shaderId, "mvpMatrix", @mvpMatrix)
-            @ctx.uniform(@shaderId, "color", vec4.fromValues(1.0, 1.0, 0.0, 1.0))
+            @ctx.uniform(@shaderId, "color", vec4.fromValues(1.0, 1.0, 1.0, 1.0))
 
             # 頂点属性をVBOにする
             # getAttribLocation は必要なし.vertexAttribPointerで直接指定する

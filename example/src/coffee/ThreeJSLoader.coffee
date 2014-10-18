@@ -20,6 +20,9 @@ define ["prelude"], (prelude) ->
             (geometry, materials) =>
                 loadContext = new LoadContext(geometry, materials)
 
+                window.a = geometry
+                window.b = materials
+
                 callback({
                     vertices: loadContext.createVertexArray()
                 })

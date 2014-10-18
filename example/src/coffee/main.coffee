@@ -2,6 +2,7 @@ $("#render-button").click(() ->
     require ["App", "Setting"], (App, Setting) ->
         select = (query) -> document.querySelector(query)
         c = select("#controlpanel")
+        window.c = c
 
         setting = new Setting(
             # Canvas要素
