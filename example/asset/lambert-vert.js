@@ -1,4 +1,4 @@
-// フォンシェーダ実装
+// ランバートシェーダ実装(グーローシェーディング)
 function VertexShader() {
     this.mvpMatrix = null;
     this.modelViewMatrix = null;

@@ -1,24 +1,11 @@
 define ["prelude", "gl", "util", "ThreeJSLoader"], (prelude, gl, util, ThreeJSLoader) ->
-    createMVP = (width, height, near, far) ->
-        m = mat4.create()
-        v = mat4.create()
-        p = mat4.create()
-        mvp = mat4.create()
-
-        mat4.lookAt(v, [0.0, 0.0, 3.0], [0, 0, 0], [0, 1, 0])
-        mat4.perspective(p, Math.PI / 2.0, width / height, near, far)
-
-        mat4.mul(mvp, p, v)
-        mat4.mul(mvp, mvp, m)
-
     class App
         @main: (setting) ->
             c = setting.canvasElement
-            mvpMatrix = createMVP(c.width, c.height, setting.near, setting.far)
             ctx = gl.getContext(c)
-            new App(setting, mvpMatrix, ctx, new ThreeJSLoader()).run()
+            new App(setting, ctx, new ThreeJSLoader()).run()
 
-        constructor: (@setting, @mvpMatrix, @ctx, @loader) ->
+        constructor: (@setting, @ctx, @loader) ->
             @shaderId = -1
 
         run: =>
@@ -26,9 +13,8 @@ define ["prelude", "gl", "util", "ThreeJSLoader"], (prelude, gl, util, ThreeJSLo
 
         render: (model) =>
             vertices = model.vertices
-            colors = model.colors
 
-            @ctx.clearColor(1.0, 1.0, 1.0, 1.0)
+            @ctx.clearColor(1.0, 1.0, 0.0, 1.0)
             # バッファ指定非対応
             @ctx.clear()
 
@@ -38,8 +24,12 @@ define ["prelude", "gl", "util", "ThreeJSLoader"], (prelude, gl, util, ThreeJSLo
 
             # uniform登録
             # uniformの型は区別しない
-            @ctx.uniform(@shaderId, "mvpMatrix", @mvpMatrix)
+            @ctx.uniform(@shaderId, "mvpMatrix", @computeMVPMatrix())
+            @ctx.uniform(@shaderId, "modelViewMatrix", @computeModelViewMatrix())
             @ctx.uniform(@shaderId, "color", vec4.fromValues(1.0, 1.0, 1.0, 1.0))
+            @ctx.uniform(@shaderId, "lightPosition", vec4.fromValues(3.0, 3.0, -3.0, 1.0))
+            @ctx.uniform(@shaderId, "Kd", vec3.fromValues(0.5, 0.5, 0.5))
+            @ctx.uniform(@shaderId, "Ld", vec3.fromValues(0.9, 0.9, 0.9))
 
             # 頂点属性をVBOにする
             # getAttribLocation は必要なし.vertexAttribPointerで直接指定する
@@ -48,7 +38,7 @@ define ["prelude", "gl", "util", "ThreeJSLoader"], (prelude, gl, util, ThreeJSLo
             # colorVbo = @sendVertices(@setting.colors)
             vertexVbo = @sendVertices(vertices)
             # colorVbo = @sendVertices(model.colors)
-            # normalVbo = @sendVertices(model.normals)
+            normalVbo = @sendVertices(model.normals)
 
             # attribute属性にVBOを登録
             @ctx.bindBuffer(gl.ARRAY_BUFFER, vertexVbo);
@@ -59,9 +49,9 @@ define ["prelude", "gl", "util", "ThreeJSLoader"], (prelude, gl, util, ThreeJSLo
             # # ctx.enableVertexAttribArray(attLocation); # attribute属性は常に有効とする
             # @ctx.vertexAttribPointer(@shaderId, "color", 4)
 
-            # @ctx.bindBuffer(gl.ARRAY_BUFFER, normalVbo);
-            # # ctx.enableVertexAttribArray(attLocation); # attribute属性は常に有効とする
-            # @ctx.vertexAttribPointer(@shaderId, "normal", 3)
+            @ctx.bindBuffer(gl.ARRAY_BUFFER, normalVbo);
+            # ctx.enableVertexAttribArray(attLocation); # attribute属性は常に有効とする
+            @ctx.vertexAttribPointer(@shaderId, "normal", 3)
 
             # レンダリング
             # @ctx.drawArrays(gl.TRIANGLES, 0, @setting.vertices.length / @setting.stride)
@@ -69,6 +59,23 @@ define ["prelude", "gl", "util", "ThreeJSLoader"], (prelude, gl, util, ThreeJSLo
 
             # flush非対応
             # @ctx.flush()
+
+        computeMVPMatrix: ->
+            modelView = @computeModelViewMatrix()
+            projection = @computeProjectionMatrix()
+            mat4.mul(mat4.create(), projection, modelView)
+
+        computeProjectionMatrix: ->
+            width = @setting.canvasElement.width
+            height = @setting.canvasElement.height
+            near = @setting.near
+            far = @setting.far
+
+            mat4.perspective(mat4.create(), Math.PI / 2.0, width / height, near, far)
+
+        computeModelViewMatrix: ->
+            # めんどくさいのでモデル変換行列は単位行列として省略!
+            mat4.lookAt(mat4.create(), [0.0, 0.0, 3.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0])
 
         sendVertices: (data) ->
             vboId = @ctx.createBuffer()

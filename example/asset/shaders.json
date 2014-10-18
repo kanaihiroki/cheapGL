@@ -12,6 +12,12 @@
 		"frag": "phong-frag.js"
 	},
 	{
+		"id" : "diffuse",
+		"shaderName": "ランバートシェーダ",
+		"vert": "lambert-vert.js",
+		"frag": "lambert-frag.js"
+	},
+	{
 		"id" : "normal-map",
 		"shaderName": "法線マッピング",
 		"vert": "normalmap-vert.js",
