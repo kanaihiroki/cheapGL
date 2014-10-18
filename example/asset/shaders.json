@@ -1,0 +1,20 @@
+[
+	{
+		"id" : "passthrough",
+		"shaderName": "パススルーシェーダ",
+		"vert": "passthrough-vert.js",
+		"frag": "passthrough-frag.js"
+	},
+	{
+		"id" : "phong",
+		"shaderName": "フォンシェーダ",
+		"vert": "phong-vert.js",
+		"frag": "phong-frag.js"
+	},
+	{
+		"id" : "normal-map",
+		"shaderName": "法線マッピング",
+		"vert": "normalmap-vert.js",
+		"frag": "normalmap-frag.js"
+	}
+]

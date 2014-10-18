@@ -5,8 +5,6 @@ define ["util"], (util) ->
 			@vert,
 			@frag,
 			@modelPath,
-			@ext,
-			@rotate,
 			@near,
 			@far,
 			@stride = 3,

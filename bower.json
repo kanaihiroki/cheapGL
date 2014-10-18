@@ -25,6 +25,9 @@
     "jquery": "~2.1.1",
     "polymer": "Polymer/polymer#~0.4.0",
     "paper-elements": "Polymer/paper-elements#~0.4.0",
-    "threejs": "*"
+    "threejs": "*",
+    "console-polyfill": "~0.1.2",
+    "core-ajax": "Polymer/core-ajax#~0.4.1",
+    "threex-colladaloader": "~0.0.1"
   }
 }

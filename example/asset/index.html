@@ -3,10 +3,13 @@
 <head>
     <meta charset="utf-8">
     <title>OpenGLライクなライブラリ サンプル</title>
-	<script type="text/javascript" src="lib/platform/platform.js"></script>
-	<script type="text/javascript" src="lib/jquery/dist/jquery.js"></script>
-	<script type="text/javascript" src="lib/gl-matrix/dist/gl-matrix.js"></script>
-	<script type="text/javascript" src="lib/threejs/build/three.js"></script>
+	<script type="text/javascript" src="/bower_components/platform/platform.js"></script>
+	<script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
+	<script type="text/javascript" src="/bower_components/gl-matrix/dist/gl-matrix.js"></script>
+	<script type="text/javascript" src="/bower_components/threejs/build/three.js"></script>
+	<script type="text/javascript" src="/bower_components/threex-colladaloader/ColladaLoader.js"></script>
+	<script type="text/javascript" src="/bower_components/threejs-stats/Stats.js"></script> <!-- 不要? -->
+	<script type="text/javascript" src="/bower_components/console-polyfill/index.js"></script>
 	<link rel="import" href="elements/control.html"></link>
 <style>
 #left {
@@ -29,7 +32,6 @@
 
 </head>
 <body>
-<h1>OpenGLライクなライブラリ サンプル</h1>
 
 <canvas id="display" width="800" height="600" style="width: 800; height: 600; background-image: linear-gradient(white, gray);"></canvas>
 
@@ -39,6 +41,6 @@
 
 <cheapgl-controlpanel id="controlpanel"></cheapgl-controlpanel>
 
-<script type="text/javascript" src="lib/requirejs/require.js" data-main="all"></script>
+<script type="text/javascript" src="/bower_components/requirejs/require.js" data-main="all"></script>
 </body>
 </html>

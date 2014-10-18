@@ -1,4 +1,4 @@
-define ["prelude", "gl", "util", "ext/ThreeJSLoader"], (prelude, gl, util, ThreeJSLoader) ->
+define ["prelude", "gl", "util", "ThreeJSLoader"], (prelude, gl, util, ThreeJSLoader) ->
 	createMVP = (width, height, near, far) ->
 		m = mat4.create()
 		v = mat4.create()
@@ -23,11 +23,11 @@ define ["prelude", "gl", "util", "ext/ThreeJSLoader"], (prelude, gl, util, Three
 
 		run: () =>
 			@loader.load(@setting.modelPath, @render)
-			
+
 		render: (model) =>
 			vertices = model.vertices
 			colors = model.colors
-	
+
 			@ctx.clearColor(1.0, 1.0, 1.0, 1.0)
 			# バッファ指定非対応
 			@ctx.clear()
@@ -39,7 +39,7 @@ define ["prelude", "gl", "util", "ext/ThreeJSLoader"], (prelude, gl, util, Three
 			# uniform登録
 			# uniformの型は区別しない
 			@ctx.uniform(@shaderId, "mvpMatrix", @mvpMatrix)
-			@ctx.uniform(@shaderId, "color", vec4.fromValues(1.0, 1.0, 0.0, 1.0))
+			# @ctx.uniform(@shaderId, "color", vec4.fromValues(1.0, 1.0, 0.0, 1.0))
 
 			# 頂点属性をVBOにする
 			# getAttribLocation は必要なし.vertexAttribPointerで直接指定する
@@ -47,17 +47,22 @@ define ["prelude", "gl", "util", "ext/ThreeJSLoader"], (prelude, gl, util, Three
 			# vertexVbo = @sendVertices(@setting.vertices)
 			# colorVbo = @sendVertices(@setting.colors)
 			vertexVbo = @sendVertices(vertices)
-			colorVbo = @sendVertices(colors)
+			colorVbo = @sendVertices(model.colors)
+			normalVbo = @sendVertices(model.normals)
 
-					
 			# attribute属性にVBOを登録
 			@ctx.bindBuffer(gl.ARRAY_BUFFER, vertexVbo);
 			# ctx.enableVertexAttribArray(attLocation); # attribute属性は常に有効とする
 			@ctx.vertexAttribPointer(@shaderId, "position", @setting.stride)
 
-			@ctx.bindBuffer(gl.ARRAY_BUFFER, colorVbo);
-			# ctx.enableVertexAttribArray(attLocation); # attribute属性は常に有効とする
-			@ctx.vertexAttribPointer(@shaderId, "color", 4)
+			# @ctx.bindBuffer(gl.ARRAY_BUFFER, colorVbo);
+			# # ctx.enableVertexAttribArray(attLocation); # attribute属性は常に有効とする
+			# @ctx.vertexAttribPointer(@shaderId, "color", 4)
+
+			# @ctx.bindBuffer(gl.ARRAY_BUFFER, normalVbo);
+			# # ctx.enableVertexAttribArray(attLocation); # attribute属性は常に有効とする
+			# @ctx.vertexAttribPointer(@shaderId, "normal", 3)
+
 
 			# レンダリング
 			# @ctx.drawArrays(gl.TRIANGLES, 0, @setting.vertices.length / @setting.stride)
@@ -71,4 +76,3 @@ define ["prelude", "gl", "util", "ext/ThreeJSLoader"], (prelude, gl, util, Three
 			@ctx.bindBuffer(gl.ARRAY_BUFFER, vboId);
 			@ctx.bufferData(gl.ARRAY_BUFFER, data);
 			return vboId
-			

@@ -9,9 +9,7 @@ $("#render-button").click(() ->
 
 			c.vertSource,
 			c.fragSource,
-			c.modelPath,
-			c.ext,
-			c.rotate,
+			c.modelId,
 
 			0.1,
 			100,

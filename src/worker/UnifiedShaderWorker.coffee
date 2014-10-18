@@ -1,4 +1,4 @@
-importScripts("lib/gl-matrix/dist/gl-matrix.js")
+importScripts("/bower_components/gl-matrix/dist/gl-matrix.js")
 importScripts("gl-matrix-ext.js")
 
 # FragmentShaderと共通かできる?(現実のハードウェアではしている)

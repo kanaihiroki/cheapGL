@@ -2,6 +2,7 @@
 	{
 		"id": "monkey",
 		"name": "猿",
-		"path": "monkey.json"
+		"path": "monkey.json",
+		"defaultShader": "phong"
 	}
 ]

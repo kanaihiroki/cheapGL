@@ -1,20 +1,21 @@
-<link rel="import" href="/lib/polymer/polymer.html">
-<link rel="import" href="/lib/core-ajax/core-ajax.html">
-<link rel="import" href="/lib/core-header-panel/core-header-panel.html">
-<link rel="import" href="/lib/core-toolbar/core-toolbar.html">
-<link rel="import" href="/lib/paper-tabs/paper-tabs.html">
+<script src="/bower_components/lodash/dist/lodash.js"></script>
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="/bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="/bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
 
 <polymer-element name="cheapgl-controlpanel">
 <template>
 
-<core-ajax url="/menu.json" auto response="{{menu}}"></core-ajax>
+<core-ajax url="/shaders.json" auto response="{{shaders}}"></core-ajax>
 <core-ajax url="../models.json" auto response="{{models}}"></core-ajax>
-<core-ajax url="/{{menu.vert[shaderId]}}" auto response="{{vertSource}}"></core-ajax>
-<core-ajax url="/{{menu.frag[shaderId]}}" auto response="{{fragSource}}"></core-ajax>
+<core-ajax url="/{{vertShader}}" auto response="{{vertSource}}"></core-ajax>
+<core-ajax url="/{{fragShader}}" auto response="{{fragSource}}"></core-ajax>
 
 <div id="left">
 
-<textarea id="vert" class="source" cols="80" rows="20">
+<textarea id="vert" class="source" cols="80" rows="20" style="float: left">
 {{vertSource}}
 </textarea>
 <textarea id="frag" class="source" cols="80" rows="20">
@@ -31,10 +32,9 @@
 <td><label for="select-model">モデル選択</label></td>
 <td>
 
-<select value="{{modelPath}}">
+<select value="{{modelId}}">
 <template repeat="{{model in models}}">
-<option></option>
-<option value="{{model.path}}">{{model.name}}</option>
+<option value="{{model.id}}">{{model.name}}</option>
 </template>
 </select>
 
@@ -49,8 +49,8 @@
 
 <td>
 <select value="{{shaderId}}">
-<template repeat="{{shaderName, idx in menu.shaderName}}">
-<option value="{{idx}}">{{shaderName}}</option>
+<template repeat="{{shader in shaders}}">
+<option value="{{shader.id}}">{{shader.shaderName}}</option>
 </template>
 </select>
 </td>
@@ -73,8 +73,26 @@
 
 <script>
 Polymer('cheapgl-controlpanel', {
+	vertShader: "passthrough-vert.js",
+	fragShader: "passthrough-frag.js",
 	modelsChanged: function() {
-		this.modelPath = "monkey.json";
+		this.modelId = "monkey";
+	},
+	modelIdChanged: function() {
+		var modelId = this.modelId;
+		var m = _.find(this.models, function(model) {
+				return modelId === model.id;
+		});
+		this.modelPath = m.path;
+		this.shaderId = m.defaultShader;
+	},
+	shaderIdChanged: function() {
+		var shaderId = this.shaderId;
+		var s = _.find(this.shaders, function(shader) {
+				return shaderId === shader.id;
+		});
+		this.vertShader = s.vert;
+		this.fragShader = s.frag;
 	}
 });
 </script>
