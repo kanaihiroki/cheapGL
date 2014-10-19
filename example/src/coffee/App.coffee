@@ -28,8 +28,13 @@ define ["prelude", "gl", "util", "ThreeJSLoader"], (prelude, gl, util, ThreeJSLo
             @ctx.uniform(@shaderId, "modelViewMatrix", @computeModelViewMatrix())
             @ctx.uniform(@shaderId, "color", vec4.fromValues(1.0, 1.0, 1.0, 1.0))
             @ctx.uniform(@shaderId, "lightPosition", vec4.fromValues(3.0, 3.0, -3.0, 1.0))
-            @ctx.uniform(@shaderId, "Kd", vec3.fromValues(0.5, 0.5, 0.5))
-            @ctx.uniform(@shaderId, "Ld", vec3.fromValues(0.9, 0.9, 0.9))
+            @ctx.uniform(@shaderId, "Ka", vec3.fromValues(1.0, 1.0, 1.0))
+            @ctx.uniform(@shaderId, "Kd", vec3.fromValues(1.0, 1.0, 1.0))
+            @ctx.uniform(@shaderId, "Ks", vec3.fromValues(1.0, 1.0, 1.0))
+            @ctx.uniform(@shaderId, "La", vec3.fromValues(0.1, 0.1, 0.1))
+            @ctx.uniform(@shaderId, "Ld", vec3.fromValues(0.6, 0.6, 0.6))
+            @ctx.uniform(@shaderId, "Ls", vec3.fromValues(0.3, 0.3, 0.3))
+            @ctx.uniform(@shaderId, "shiness", 4.0)
 
             # 頂点属性をVBOにする
             # getAttribLocation は必要なし.vertexAttribPointerで直接指定する

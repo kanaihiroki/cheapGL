@@ -12,6 +12,12 @@
 		"frag": "phong-frag.js"
 	},
 	{
+		"id" : "gouraud",
+		"shaderName": "グーローシェーダ",
+		"vert": "gouraud-vert.js",
+		"frag": "gouraud-frag.js"
+	},
+	{
 		"id" : "diffuse",
 		"shaderName": "ランバートシェーダ",
 		"vert": "lambert-vert.js",

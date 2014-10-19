@@ -1,4 +1,5 @@
-// フォンシェーダ実装
+// グーローシェーディング実装
+// 頂点色をAmbient, Diffuse, Specularを使い計算し、フラグメントの色は頂点色から線形補完する。
 function VertexShader() {
     this.mvpMatrix = null;
     this.modelViewMatrix = null;
@@ -27,7 +28,9 @@ function VertexShader() {
             lightPosition = vec4.create(),
             s = vec3.create(), 
             v = vec3.create(),
-            lightIntensity = vec3.create();
+            r = vec3.create(),
+            lightIntensity = vec3.create(),
+            sn;
 
         vec4.transformMat4(eyeCoords, pos, this.modelViewMatrix);
         vec4.transformMat4(lightPosition, this.lightPosition, this.modelViewMatrix);
@@ -37,8 +40,8 @@ function VertexShader() {
         vec3.normalize(s, s);
         vec3.normalize(v, v);
 
-        var r = vec3.reflection(vec3.scale(vec3.create(), s, -1), vertex.normal),
-            sn = Math.max(vec3.dot(s, vertex.normal), 0.0);
+        r = vec3.reflection(vec3.scale(r, s, -1), vertex.normal);
+        sn = Math.max(vec3.dot(s, vertex.normal), 0.0);
 
         vec3.scale(diffuse, vec3.mul(diffuse, this.Ld, this.Kd), sn);
 
