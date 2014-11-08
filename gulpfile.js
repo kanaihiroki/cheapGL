@@ -16,27 +16,6 @@ gulp.task("clean", function() {
         .pipe($.clean());
 });
 
-// gulp.task("polymer-components", function() {
-
-//     return gulp.src("bower_components/core-ajax/**/*")
-//         .pipe(gulp.dest("public/lib/core-ajax"));
-// });
-
-// gulp.task('bower', ["polymer-components"], function() {
-//     return gulp.src(mainBowerFiles())
-//         .pipe($.rename(function(path) {
-//             console.log(path);
-//             if (path.basename === "index") {
-//                 path.basename = "console-polyfill";
-//             }
-//         })).pipe(gulp.dest("public/lib"));
-// });
-
-// gulp.task('bower', function() {
-//     return gulp.src(["bower_components/**/*.js", "bower_components/**/*.html", "bower_components/**/*.js.map", "bower_components/**/*.css"])
-//         .pipe(gulp.dest("public/lib"));
-// });
-
 gulp.task("ext", function () {
     return gulp.src("ext/js/*")
         .pipe(gulp.dest(build));

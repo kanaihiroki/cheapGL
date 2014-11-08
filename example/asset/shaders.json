@@ -1,30 +1,37 @@
 [
 	{
 		"id" : "passthrough",
-		"shaderName": "パススルーシェーダ",
+		"shaderName": "パススルー",
 		"vert": "passthrough-vert.js",
 		"frag": "passthrough-frag.js"
 	},
 	{
-		"id" : "phong",
-		"shaderName": "フォンシェーダ",
-		"vert": "phong-vert.js",
-		"frag": "phong-frag.js"
-	},
-	{
 		"id" : "gouraud",
-		"shaderName": "グーローシェーダ",
+		"shaderName": "グーローシェーディング",
 		"vert": "gouraud-vert.js",
 		"frag": "gouraud-frag.js"
 	},
 	{
+		"id" : "phong",
+		"shaderName": "フォンシェーディング",
+		"vert": "phong-vert.js",
+		"frag": "phong-frag.js"
+	},
+	{
 		"id" : "diffuse",
-		"shaderName": "ランバートシェーダ",
+		"shaderName": "ランバートシェーディング",
 		"vert": "lambert-vert.js",
 		"frag": "lambert-frag.js"
 	},
 	{
-		"id" : "normal-map",
+		"id" : "texturemap",
+		"shaderName": "テクスチャマッピング",
+		"vert": "texturemap-vert.js",
+		"frag": "texturemap-frag.js",
+        "image": "brick.png"
+	},
+	{
+		"id" : "normalmap",
 		"shaderName": "法線マッピング",
 		"vert": "normalmap-vert.js",
 		"frag": "normalmap-frag.js"

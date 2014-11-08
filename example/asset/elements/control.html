@@ -6,92 +6,70 @@
 <link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
 
 <polymer-element name="cheapgl-controlpanel">
-<template>
+  <template>
 
-<core-ajax url="../shaders.json" auto response="{{shaders}}"></core-ajax>
-<core-ajax url="../models.json" auto response="{{models}}"></core-ajax>
-<core-ajax url="../app/{{vertShader}}" auto response="{{vertSource}}"></core-ajax>
-<core-ajax url="../app/{{fragShader}}" auto response="{{fragSource}}"></core-ajax>
+    <core-ajax url="../shaders.json" auto response="{{shaders}}"></core-ajax>
+    <core-ajax url="../models.json" auto response="{{models}}"></core-ajax>
+    <core-ajax url="../app/{{vertShader}}" auto response="{{vertSource}}"></core-ajax>
+    <core-ajax url="../app/{{fragShader}}" auto response="{{fragSource}}"></core-ajax>
 
-<div id="left">
+    <!-- •Ï•§•¢•¶•»§Ú§‚§√§»•ﬁ•∑§À§π§Î -->
+    <img id="textureImage" src="{{imagePath}}" style="width: 100px; height: 100px; display: block;"/>
+    <input id="render-button" type="button" value="render" onclick="render()">
+    <select value="{{shaderId}}">
+      <template repeat="{{shader in shaders}}">
+        <option value="{{shader.id}}">{{shader.shaderName}}</option>
+      </template>
+    </select>
 
-<textarea class="source" value="{{vertSource}}" cols="80" rows="20" style="float: left">
-</textarea>
-<textarea class="source" value="{{fragSource}}" cols="80" rows="20">
-</textarea>
-
-</div> <!-- end left -->
-
-<div id="right">
-
-<table>
-
-  <!-- <tr>
-  <td><label for="select-model">„É¢„Éá„É´ÈÅ∏Êäû</label></td>
-  <td>
-
-  <select value="{{modelId}}">
-  <template repeat="{{model in models}}">
-  <option value="{{model.id}}">{{model.name}}</option>
+    <div style="display: block;">
+      lightPosition
+      x: <input type="number" value="{{lightPosition[0]}}">
+      y: <input type="number" value="{{lightPosition[1]}}">
+      z: <input type="number" value="{{lightPosition[2]}}"> 
+    </div>
+    
+    <div>
+      <textarea class="source" value="{{vertSource}}" cols="80" rows="20" style="float: left">
+      </textarea>
+      <textarea class="source" value="{{fragSource}}" cols="80" rows="20">
+      </textarea>
+    </div> <!-- end left -->
   </template>
-  </select>
 
-  </td>
-  </tr> -->
-
-
-<tr>
-<td>
-<label for="select-shader">„Ç∑„Çß„Éº„ÉÄ„ÉºÈÅ∏Êäû</label>
-</td>
-
-<td>
-<select value="{{shaderId}}">
-<template repeat="{{shader in shaders}}">
-<option value="{{shader.id}}">{{shader.shaderName}}</option>
-</template>
-</select>
-</td>
-</tr>
-
-<tr>
-<td><label for="ext">Êã°Â§ß</label></td>
-<td><input type="text" value="1.0" id="ext"></td>
-</tr>
-
-<tr>
-<td><label for="rotate">ÂõûËª¢</label></td>
-<td><input type="text" value="1.0" id="rotate"></td>
-</tr>
-</table>
-
-</div> <!-- end right -->
-
-</template>
-
-<script>
-Polymer('cheapgl-controlpanel', {
-	vertShader: "passthrough-vert.js",
-	fragShader: "passthrough-frag.js",
-	modelsChanged: function() {
-		this.modelId = "torus";
-	},
-	modelIdChanged: function() {
-		var modelId = this.modelId;
-		var m = _.find(this.models, function(model) {
-				return modelId === model.id;
-		});
-		this.modelPath = m.path;
-		this.shaderId = m.defaultShader;
-	},
-	shaderIdChanged: function() {
-		var shaderId = this.shaderId;
-		var s = _.find(this.shaders, function(shader) {
-				return shaderId === shader.id;
-		});
-		this.vertShader = s.vert;
-		this.fragShader = s.frag;
-	}
-});
-</script>
+  <script>
+   Polymer('cheapgl-controlpanel', {
+     lightPosition: [3.0, 3.0, -3.0],
+     modelsChanged: function() {
+       this.modelId = "torus";
+     },
+     modelIdChanged: function() {
+       var modelId = this.modelId;
+       var m = _.find(this.models, function(model) {
+         return modelId === model.id;
+       });
+       this.modelPath = m.path;
+       this.shaderId = m.defaultShader;
+     },
+     shaderIdChanged: function() {
+       var shaderId = this.shaderId;
+       var s = _.find(this.shaders, function(shader) {
+         return shaderId === shader.id;
+       });
+       this.vertShader = s.vert;
+       this.fragShader = s.frag;
+       this.image = s.image || "black.png";
+       this.imagePath = "../app/" + this.image;
+     }
+     // TODO: imagePath§Œ¿ﬂƒÍ
+     /* ,
+	imagePathChanged: function() {
+	a = document;
+	b = document._currentScript;
+	console.log(document._currentScript);
+	var el = document.querySelector("#textureImage");
+	console.log(el);
+	} */
+   });
+  </script>
 </polymer-element>

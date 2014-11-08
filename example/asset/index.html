@@ -1,46 +1,52 @@
 <!doctype html>
 <html>
-<head>
+  <head>
     <meta charset="utf-8">
     <title>OpenGLライクなライブラリ サンプル</title>
-	<script type="text/javascript" src="/bower_components/platform/platform.js"></script>
-	<script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
-	<script type="text/javascript" src="/bower_components/gl-matrix/dist/gl-matrix.js"></script>
-	<script type="text/javascript" src="/bower_components/threejs/build/three.js"></script>
-	<script type="text/javascript" src="/bower_components/threex-colladaloader/ColladaLoader.js"></script>
-	<script type="text/javascript" src="/bower_components/threejs-stats/Stats.js"></script> <!-- 不要? -->
-	<script type="text/javascript" src="/bower_components/console-polyfill/index.js"></script>
-	<link rel="import" href="elements/control.html"></link>
-<style>
-#left {
-		float: left;
-		margin-right: 3em;
-}
+    <script type="text/javascript" src="/bower_components/platform/platform.js"></script>
+    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="/bower_components/gl-matrix/dist/gl-matrix.js"></script>
+    <script type="text/javascript" src="/bower_components/threejs/build/three.js"></script>
+    <script type="text/javascript" src="/bower_components/threex-colladaloader/ColladaLoader.js"></script>
+    <script type="text/javascript" src="/bower_components/threejs-stats/Stats.js"></script> <!-- 不要? -->
+    <script type="text/javascript" src="/bower_components/console-polyfill/index.js"></script>
+    <link rel="import" href="elements/control.html"></link>
+    <style>
+     #left {
+       float: left;
+       margin-right: 3em;
+     }
 
-#toggle-shader {
-		display: block;
-}
+     #toggle-shader {
+       display: block;
+     }
 
-#right {
+     #right {
 
-}
+     }
 
-.source {
-		font-size: small;
-}
-</style>
+     .source {
+       font-size: small;
+     }
 
-</head>
-<body>
+     #display {
+       width: 800;
+       height: 600;
+       background-image:
+       linear-gradient(white, gray);
+       display: block;
+       margin-bottom: 1em;
+       /* float: left; */
+     }
+    </style>
 
-<canvas id="display" width="800" height="600" style="width: 800; height: 600; background-image: linear-gradient(white, gray);"></canvas>
+  </head>
+  <body>
 
-<div>
-<input id="render-button" type="button" value="レンダリング">
-</div>
+    <canvas id="display" width="640" height="480"></canvas>
 
-<cheapgl-controlpanel id="controlpanel"></cheapgl-controlpanel>
+    <cheapgl-controlpanel id="controlpanel"></cheapgl-controlpanel>
 
-<script type="text/javascript" src="/bower_components/requirejs/require.js" data-main="all"></script>
-</body>
+    <script type="text/javascript" src="/bower_components/requirejs/require.js" data-main="all"></script>
+  </body>
 </html>

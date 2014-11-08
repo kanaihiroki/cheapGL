@@ -1,8 +1,7 @@
-$("#render-button").click(() ->
+window.render = ->
     require ["App", "Setting"], (App, Setting) ->
         select = (query) -> document.querySelector(query)
         c = select("#controlpanel")
-        window.c = c
 
         setting = new Setting(
             # Canvas要素
@@ -37,12 +36,12 @@ $("#render-button").click(() ->
                 0.0, 1.0, 0.0, 1.0,
                 1.0, 0.0, 0.0, 1.0,
                 0.0, 0.0, 1.0, 1.0,
-            ]
+            ],
+
+            lightPosition = c.lightPosition
         )
         App.main(setting)
-    )
 
 # for debug
-onload = () ->
-    $("#render-button").trigger("click")
+onload = window.render
 $(() -> setTimeout(onload, 1000))

@@ -9,7 +9,7 @@ define ["util"], (util) ->
 			@far,
 			@stride = 3,
 			@vertices = [],
-			@colors = []
+			@colors = [],
+            @lightPosition = []
 		) ->
 			util.checkNull for arg in arguments
-			

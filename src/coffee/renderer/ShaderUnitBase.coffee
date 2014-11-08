@@ -1,33 +1,45 @@
 define [], () ->
-	class ShaderUnitBase
-		constructor: (worker) ->
-			@worker = worker
-			@onProcessedHandler = () ->
-				throw "invalid state"
+    class ShaderUnitBase
+        constructor: (worker) ->
+            @worker = worker
+            @onProcessedHandler = () ->
+                throw "invalid state"
 
-		onMessage: (msg) =>
-			@onProcessedHandler(msg.data)
+        onMessage: (msg) =>
+            @onProcessedHandler(msg.data)
 
-		onProcessed: (@onProcessedHandler) ->
+        onProcessed: (@onProcessedHandler) ->
 
-		loadShader: (shader) ->
-			@send(
-				method: "setShader"
-				shaderType: @shaderType()
-				shader: shader
-			)
+        loadShader: (shader) ->
+            @send(
+                method: "setShader"
+                shaderType: @shaderType()
+                shader: shader
+            )
 
-		process: ->
-			throw "can not call abstract method"
+        preProcess: (renderer) ->
+            # uniform値はドローコールに対して設定されるらしい
+            @setUniform(renderer.program.uniforms)
+            # テクスチャユニットも毎回転送するしかないはず
+            @setTextureUnit(renderer.textureUnit)
 
-		setUniform: (uniforms) ->
-			@send {
-				method: "setUniforms"
-				uniforms: uniforms
-			}
+        process: ->
+            throw "can not call abstract method"
 
-		send: (msg) ->
-			@worker.postMessage(msg)
+        setUniform: (uniforms) ->
+            @send {
+                method: "setUniforms"
+                uniforms: uniforms
+            }
 
-		shaderType: () ->
-			throw "can not call abstract method"
+        setTextureUnit: (textureUnit) ->
+            @send {
+                method: "setTextureUnit"
+                textureUnit: textureUnit
+            }
+
+        send: (msg) ->
+            @worker.postMessage(msg)
+
+        shaderType: () ->
+            throw "can not call abstract method"

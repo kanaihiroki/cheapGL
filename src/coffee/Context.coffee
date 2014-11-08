@@ -1,77 +1,108 @@
 # cheepGL Context API implementation
 define([
-	"Color",
-	"Program",
-	"Buffer",
-	"Renderer",
-	"IllegalArgumentException"
-	], (
-	Color,
-	Program,
-	Buffer,
-	Renderer,
-	IllegalArgumentException) ->
-	class Context
-		@create: (htmlCanvas) ->
-			canvasImpl = htmlCanvas.getContext("2d")
+    "Color",
+    "Program",
+    "Buffer",
+    "Texture",
+    "Renderer",
+    "IllegalArgumentException",
+    ], (
+    Color,
+    Program,
+    Buffer,
+    Texture,
+    Renderer,
+    IllegalArgumentException) ->
+    class Context
+        @create: (htmlCanvas) ->
+            canvasImpl = htmlCanvas.getContext("2d")
 
-			width = htmlCanvas.width
-			height = htmlCanvas.height
-	
-			new Context(canvasImpl,
-				Renderer.create(canvasImpl, width, height))
+            width = htmlCanvas.width
+            height = htmlCanvas.height
 
-		constructor: (@canvasContext, @renderer) ->
-			@canvas = @canvasContext.canvas
-			@programs = []
-			@buffers = []
-			@currentBuffer = null
-			@clearColorStyle = "rgb(0, 0, 0, 1)"
+            new Context(canvasImpl,
+                Renderer.create(canvasImpl, width, height))
 
-		toString: () ->
-			"cheepGL Context[#{@canvasContext}]"
+        constructor: (@canvasContext, @renderer) ->
+            @canvas = @canvasContext.canvas
+            @clearColorStyle = "rgb(0, 0, 0, 1)"
+            @programs = []
 
-		clearColor: (r, g, b, a) ->
-			@clearColorStyle = "rgb(#{r}, #{g}, #{b}, #{a})"
+            @buffers = []
+            @currentBuffer = null
 
-		# 同期的に動作する
-		clear: () ->
-			@renderer.clear(@clearColorStyle)
-	
-		createProgram: (vert, frag) ->
-			if typeof vert isnt "string"
-				throw new IllegalArgumentException("vert")
+            @textures = [] # テクスチャ自体はテクスチャユニットの数より多く持てるようになっているということ
+            @currentTextureUnitIndex = 0
 
-			if typeof frag isnt "string"
-				throw new IllegalArgumentException("frag")
-	
-			programId = @programs.length
-			@programs.push(new Program(vert, frag))
-			return programId
+        toString: () ->
+            "cheepGL Context[#{@canvasContext}]"
 
-		createBuffer: () ->
-			bufferId = @buffers.length
-			@buffers.push(new Buffer(bufferId))
-			return bufferId
+        clearColor: (r, g, b, a) ->
+            @clearColorStyle = "rgb(#{r}, #{g}, #{b}, #{a})"
 
-		useProgram: (programId) ->
-			@renderer.loadProgram(@programs[programId])
+        clear: () ->
+            @renderer.clear(@clearColorStyle)
 
-		bindBuffer: (bufferType, bufferId) ->
-			@currentBuffer = @buffers[bufferId]
+        # shader API
+        createProgram: (vert, frag) ->
+            if typeof vert isnt "string"
+                throw new IllegalArgumentException("vert")
 
-		bufferData: (bufferType, data) ->
-			# bufferTypeは必要ないように思える
-			@currentBuffer.data = data
+            if typeof frag isnt "string"
+                throw new IllegalArgumentException("frag")
 
-		vertexAttribPointer: (programId, attributeName, stride) ->
-			program = @programs[programId]
-			program.bindBuffer(attributeName, @currentBuffer, stride)
+            programId = @programs.length
+            @programs.push(new Program(vert, frag))
+            return programId
 
-		uniform: (programId, uniformName, data) ->
-			program = @programs[programId]
-			program.uniform(uniformName, data)
+        useProgram: (programId) ->
+            @renderer.loadProgram(@programs[programId])
 
-		drawArrays: (mode, first, count) ->
-			@renderer.drawArrays(mode, first, count)
-	)
+        # buffer API
+        createBuffer: () ->
+            bufferId = @buffers.length
+            @buffers.push(new Buffer(bufferId))
+            return bufferId
+
+        bindBuffer: (bufferType, bufferId) ->
+            @currentBuffer = @buffers[bufferId]
+
+        bufferData: (bufferType, data) ->
+            # bufferTypeは必要ないように思える
+            @currentBuffer.data = data
+
+        # texture API
+        activeTexture: (index) ->
+            @currentTextureUnitIndex = index
+
+        createTexture: ->
+            textureId = @textures.length
+            @textures.push(new Texture())
+            return textureId
+
+        bindTexture: (textureType, textureId) ->
+            texture = @textures[textureId]
+            @_currentTexture(texture)
+
+        texImage2D: (mode, texture) ->
+            @_currentTexture().loadImage(texture)
+
+
+        vertexAttribPointer: (programId, attributeName, stride) ->
+            program = @programs[programId]
+            program.bindBuffer(attributeName, @currentBuffer, stride)
+
+        uniform: (programId, uniformName, data) ->
+            program = @programs[programId]
+            program.uniform(uniformName, data)
+
+        # rendering
+        drawArrays: (mode, first, count) ->
+            @renderer.drawArrays(mode, first, count)
+
+        _currentTexture: ->
+            if arguments.length > 0
+                @renderer.textureUnit[@currentTextureUnitIndex] = arguments[0]
+            else
+                @renderer.textureUnit[@currentTextureUnitIndex]
+)

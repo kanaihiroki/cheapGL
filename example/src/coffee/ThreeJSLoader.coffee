@@ -2,7 +2,7 @@ define ["prelude"], (prelude) ->
     class ThreeJSLoader
         # 法線マップの読み込みがうまくいかないので、こっちでなんとかする
         class LoadContext
-            constructor: (@geometry, @materials) ->
+            constructor: (@geometry, @texture) ->
 
             createVertexArray: ->
                 vs = @geometry.vertices
@@ -16,26 +16,37 @@ define ["prelude"], (prelude) ->
                 prelude.concat(prelude.map(prelude.concat(faceNormals), (v) ->
                     [v.x, v.y, v.z]))
 
+            # テクスチャ読み込み。Canvas をテクスチャフォーマットとして使用
+            createTextureArray: ->
+                # TODO: 複数のテクスチャ読み込み対応
+                img = @texture.image
+                canvas = document.createElement("canvas")
+                canvas.width = img.width
+                canvas.height = img.height
+                ctx = canvas.getContext("2d")
+                ctx.drawImage(img, 0, 0)
+                [{width: img.width, height: img.height, canvas: ctx}]
+
+            createUVArray: ->
+                faceUVs = @geometry.faceVertexUvs[0]
+                prelude.concat(prelude.map(prelude.concat(faceUVs), (v) ->
+                    [v.x, v.y]))
+
         constructor: (@impl = new THREE.JSONLoader()) ->
 
         load: (path, callback) ->
+            THREE.ImageUtils.loadTexture('brick.png', THREE.UVMapping, @_onLoad(callback))
             # @impl.load(path, @_onLoad(callback))
-            @_onLoad(callback)()
+            # @_onLoad(callback)()
 
         _onLoad: (callback) ->
-            (geometry, materials) =>
+            (texture) =>
                 geometry = new THREE.TorusGeometry(1, 0.3 ,16, 100)
-                loadContext = new LoadContext(geometry, materials)
-
-                window.a = geometry
-                window.b = materials
-
-                # for uvs in geometry.faceVertexUvs[0]
-                #     console.log("---------------")
-                #     for uv in uvs
-                #         console.log(uv)
+                ctx = new LoadContext(geometry, texture)
 
                 callback({
-                    vertices: loadContext.createVertexArray()
-                    normals: loadContext.createNormalArray()
+                    vertices: ctx.createVertexArray()
+                    normals: ctx.createNormalArray()
+                    uvs: ctx.createUVArray()
+                    textures: ctx.createTextureArray()
                 })

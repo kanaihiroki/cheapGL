@@ -3,6 +3,6 @@
 		"id": "torus",
 		"name": "トーラス",
 		"path": "torus.json",
-		"defaultShader": "phong"
+		"defaultShader": "normalmap"
 	}
 ]
