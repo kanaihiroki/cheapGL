@@ -3,14 +3,15 @@ define ["prelude", "gl", "util", "ThreeJSLoader"], (prelude, gl, util, ThreeJSLo
         @main: (setting) ->
             c = setting.canvasElement
             ctx = gl.getContext(c)
-            new App(setting, ctx, new ThreeJSLoader()).run()
+            new App(setting, ctx, new ThreeJSLoader(setting)).run()
 
         constructor: (@setting, @ctx, @loader) ->
 
         run: =>
-            @loader.load(@setting.modelPath, @render)
+            @loader.load(@render)
 
         render: (model) =>
+            window.m = model
             vertices = model.vertices
 
             @ctx.clearColor(1.0, 1.0, 0.0, 1.0)

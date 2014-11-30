@@ -10,6 +10,7 @@ define ["util"], (util) ->
 			@stride = 3,
 			@vertices = [],
 			@colors = [],
+            @textureFIle = "",
             @lightPosition = []
 		) ->
 			util.checkNull for arg in arguments

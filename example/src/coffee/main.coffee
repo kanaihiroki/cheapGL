@@ -38,6 +38,7 @@ window.render = ->
                 0.0, 0.0, 1.0, 1.0,
             ],
 
+            textureFile = c.image,
             lightPosition = c.lightPosition
         )
         App.main(setting)
