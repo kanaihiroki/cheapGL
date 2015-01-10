@@ -1,4 +1,4 @@
-// テクスチャマッピング実装
+// 法線マッピング実装
 function VertexShader() {
     this.mvpMatrix = null;
     this.modelViewMatrix = null;

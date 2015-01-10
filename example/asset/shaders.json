@@ -1,40 +1,34 @@
 [
     {
-	"id" : "passthrough",
-	"shaderName": "パススルー",
-	"vert": "passthrough-vert.js",
-	"frag": "passthrough-frag.js"
+	    "id" : "passthrough",
+	    "shaderName": "パススルー",
+	    "vert": "passthrough-vert.js",
+	    "frag": "passthrough-frag.js"
     },
     {
-	"id" : "gouraud",
-	"shaderName": "グーローシェーディング",
-	"vert": "gouraud-vert.js",
-	"frag": "gouraud-frag.js"
+	    "id" : "gouraud",
+	    "shaderName": "グーローシェーディング",
+	    "vert": "gouraud-vert.js",
+	    "frag": "vertexcolor-frag.js"
     },
     {
-	"id" : "phong",
-	"shaderName": "フォンシェーディング",
-	"vert": "phong-vert.js",
-	"frag": "phong-frag.js"
+	    "id" : "diffuse",
+	    "shaderName": "ランバートシェーディング",
+	    "vert": "lambert-vert.js",
+	    "frag": "vertexcolor-frag.js"
     },
     {
-	"id" : "diffuse",
-	"shaderName": "ランバートシェーディング",
-	"vert": "lambert-vert.js",
-	"frag": "lambert-frag.js"
-    },
-    {
-	"id" : "texturemap",
-	"shaderName": "テクスチャマッピング",
-	"vert": "texturemap-vert.js",
-	"frag": "texturemap-frag.js",
+	    "id" : "texturemap",
+	    "shaderName": "テクスチャマッピング",
+	    "vert": "texturemap-vert.js",
+	    "frag": "texturemap-frag.js",
         "image": "color.png"
     },
     {
-	"id" : "normalmap",
-	"shaderName": "法線マッピング",
-	"vert": "normalmap-vert.js",
-	"frag": "normalmap-frag.js",
-	"image": "normalmap.png"
+	    "id" : "normalmap",
+	    "shaderName": "法線マッピング",
+	    "vert": "normalmap-vert.js",
+	    "frag": "normalmap-frag.js",
+	    "image": "normalmap.png"
     }
 ]

@@ -1,11 +1,12 @@
-// テクスチャマッピング実装
+// 法線マッピング実装
 function FragmentShader() {
     this.color = null;
     this.lightPosition = null;
     this.texture0 = null;
     
 	this.main = function(fragment) {
-        fragment.gl_Color = vec4.texture2D(this.texture0, fragment.texture_coord);
+        var fragment_normal = vec4.texture2D(this.texture0, fragment.texture_coord);
+        console.log(fragment_normal);
         
 		return {
 			gl_FragColor: fragment.gl_Color

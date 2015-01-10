@@ -35,7 +35,6 @@ define ["prelude"], (pl) ->
                     z = [v0.z, v1.z, v2.z]
                     u = [UVs[0].x, UVs[1].x, UVs[2].x]
                     v = [UVs[0].y, UVs[1].y, UVs[2].y]
-                    console.log(u,v)
 
                     # 接ベクトルのローカル座標形での値の計算
                     tangent = for i in [0..2]

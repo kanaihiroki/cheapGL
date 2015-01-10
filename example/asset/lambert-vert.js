@@ -1,4 +1,5 @@
-// ランバートシェーダ実装(グーローシェーディング)
+// ランバートシェーダ実装
+// diffuseのみで色を決定する。
 function VertexShader() {
     this.mvpMatrix = null;
     this.modelViewMatrix = null;
