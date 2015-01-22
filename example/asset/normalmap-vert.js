@@ -4,64 +4,45 @@ function VertexShader() {
     this.modelViewMatrix = null;
     this.color = null;
     this.lightPosition = null;
-    this.Ka = null; // アンビエント反射率
-    this.Kd = null; // ディヒューズ反射率
-    this.Ks = null; // スペキュラ反射率
-    this.shiness = null; // スペキュラ輝き乗数
-    this.La = null; // 光源のアンビエント強度
-    this.Ld = null; // 光源のディヒューズ強度
-    this.Ls = null; // 光源のスペキュラ強度
     this.texture0 = null;
 
     this.main = function (vertex) {
-        var pos = vec4.fromVec3(vertex.position, 1.0);
-
-        // vertex.uv - こいつを使う
-
-        // シェーディング
+        // 頂点法線は正規化済み
+        var modelViewMat3 = mat3.fromMat4(mat3.create(), this.modelViewMatrix),
+            position = vec4.fromVec3(vertex.position, 1.0),
+            tangent = vec3.normalize(vec3.create(), vertex.tangent),
+            eyePosition = vec3.create(),
+            eyeLight = vec3.create(),
+            eyeNormal = vec3.create(), // 視点座標系での接ベクトル
+            eyeTangent = vec3.create(),
+            eyeBiTangent = vec3.create(),
+            surfaceLightDir = vec3.create(), // 接空間座標系での光源方向ベクトル
+            surfaceEyeDir = vec3.create(), // 接空間座標系での視点方向ベクトル
+            toSurfaceMat3; // 視点座標系から接空間座標系への変換行列
         
-        // 頂点法線は正規化済みを受け入れるので下記は不要
-        // vec3.normalize(vertex.normal, vertex.normal);
-
-        var ambient = vec3.mul(vec3.create(), this.La, this.Ka),
-            diffuse = vec3.create(),
-            specular = vec3.fromValues(0.0, 0.0, 0.0),
-            eyeCoords = vec4.create(),
-            lightPosition = vec4.create(),
-            s = vec3.create(), 
-            v = vec3.create(),
-            lightIntensity = vec3.create();
-
-        vec4.transformMat4(eyeCoords, pos, this.modelViewMatrix);
-        vec4.transformMat4(lightPosition, this.lightPosition, this.modelViewMatrix);
-        vec3.sub(s, lightPosition, eyeCoords),
-        vec3.scale(v, eyeCoords, -1);
+        // 視点座標系のベクトルを計算
+        vec3.transformMat3(eyePosition, position, modelViewMat3);
+        vec3.transformMat3(eyeLight, this.lightPosition, modelViewMat3);
+        vec3.transformMat3(eyeNormal, vertex.normal, modelViewMat3);
+        vec3.transformMat3(eyeTangent, tangent, modelViewMat3);
+        vec3.cross(eyeBiTangent, eyeNormal, eyeTangent);
         
-        vec3.normalize(s, s);
-        vec3.normalize(v, v);
-
-        var r = vec3.reflection(vec3.scale(vec3.create(), s, -1), vertex.normal),
-            sn = Math.max(vec3.dot(s, vertex.normal), 0.0);
-
-        vec3.scale(diffuse, vec3.mul(diffuse, this.Ld, this.Kd), sn);
-
-        if (sn > 0) {
-            var base = Math.max(vec3.dot(r, v), 0,0),
-                coefficient = Math.pow(base, this.shiness);
-            vec3.scale(specular, vec3.mul(specular, this.Ls, this.Ks), coefficient);
-        }
-
-        vec3.add(lightIntensity, vec3.add(lightIntensity, ambient, diffuse), specular);
-
-        for (var i = 0, n = lightIntensity.length; i < n; ++i) {
-            if (isNaN(lightIntensity[i]))
-                throw "nan found";
-        }
-
+        toSurfaceMat3 = [eyeTangent[0], eyeBiTangent[0], eyeNormal[0],
+                                     eyeTangent[1], eyeBiTangent[1], eyeNormal[1],
+                                     eyeTangent[2], eyeBiTangent[2], eyeNormal[2]];
+        vec3.transformMat3(surfaceLightDir,
+                           vec3.sub(vec3.create(), eyeLight, eyePosition), toSurfaceMat3);
+        vec3.transformMat3(surfaceEyeDir,
+                           vec3.scale(vec3.create(), eyePosition, -1), toSurfaceMat3);
+        vec3.normalize(surfaceLightDir, surfaceLightDir);
+        
         return {
-            gl_Color: vec4.fromVec3(lightIntensity, 1.0),
-            gl_Position: vec4.transformMat4(vec4.create(), pos, this.mvpMatrix),
-            texture_coord: vec4.fromValues(vertex.uv[0], vertex.uv[1], 1, 1)
+            gl_Color: vec4.create(1.0,1.0,1.0,1.0),
+            gl_Position: vec4.transformMat4(vec4.create(), position, this.mvpMatrix),
+            texture_coord: vec4.fromValues(vertex.uv[0], vertex.uv[1], 1, 1),
+            eyeNormal: vec4.fromVec3(eyeNormal, 1),
+            LightDir: vec4.fromVec3(surfaceLightDir, 1),
+            EyeDir: vec4.fromVec3(surfaceEyeDir, 1)
         };
     };
 }

@@ -5,11 +5,11 @@ function FragmentShader() {
     this.texture0 = null;
     
 	this.main = function(fragment) {
-        var fragment_normal = vec4.texture2D(this.texture0, fragment.texture_coord);
-        console.log(fragment_normal);
-        
+        var texture_normal = vec4.texture2D(this.texture0, fragment.texture_coord),
+            diffuse = Math.max(vec3.dot(fragment.LightDir, texture_normal), 0.0);
+
 		return {
-			gl_FragColor: fragment.gl_Color
+			gl_FragColor: [diffuse, diffuse, diffuse, 1]
 		};
 	};
 }

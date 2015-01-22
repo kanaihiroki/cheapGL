@@ -51,6 +51,7 @@ define ["prelude", "gl", "util", "ThreeJSLoader"], (prelude, gl, util, ThreeJSLo
             # colorVbo = @sendVertices(model.colors)
             normalVbo = @sendVertices(model.normals)
             uvVbo = @sendVertices(model.uvs)
+            tgtVbo = @sendVertices(model.tangents)
 
             # attribute属性にVBOを登録
             @ctx.bindBuffer(gl.ARRAY_BUFFER, vertexVbo)
@@ -65,6 +66,9 @@ define ["prelude", "gl", "util", "ThreeJSLoader"], (prelude, gl, util, ThreeJSLo
 
             @ctx.bindBuffer(gl.ARRAY_BUFFER, uvVbo)
             @ctx.vertexAttribPointer(shaderId, "uv", 2)
+
+            @ctx.bindBuffer(gl.ARRAY_BUFFER, tgtVbo)
+            @ctx.vertexAttribPointer(shaderId, "tangent", 3)
 
             # レンダリング
             # @ctx.drawArrays(gl.TRIANGLES, 0, @setting.vertices.length / @setting.stride)

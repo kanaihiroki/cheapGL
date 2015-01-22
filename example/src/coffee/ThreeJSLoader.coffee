@@ -44,7 +44,7 @@ define ["prelude"], (pl) ->
                         [A,B,C] = vec3.cross(vec3.create(), j, k) # 面法線
                         -C/A
                     [tangent, tangent, tangent]
-                pl.concat(tangents)
+                pl.concat(pl.concat(tangents))
 
             # テクスチャ読み込み。Canvas をテクスチャフォーマットとして使用
             createTextureArray: ->
