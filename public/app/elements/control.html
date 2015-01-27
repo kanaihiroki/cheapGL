@@ -1,0 +1,75 @@
+<script src="../../bower_components/lodash/lodash.js"></script>
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../../bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="../../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+
+<polymer-element name="cheapgl-controlpanel">
+  <template>
+
+    <core-ajax url="../shaders.json" auto response="{{shaders}}"></core-ajax>
+    <core-ajax url="../models.json" auto response="{{models}}"></core-ajax>
+    <core-ajax url="../app/{{vertShader}}" auto response="{{vertSource}}"></core-ajax>
+    <core-ajax url="../app/{{fragShader}}" auto response="{{fragSource}}"></core-ajax>
+
+    <!-- レイアウトをもっとマシにする -->
+    <img id="textureImage" src="{{imagePath}}" style="width: 100px; height: 100px; display: block;"/>
+    <input id="render-button" type="button" value="render" onclick="render()">
+    <select value="{{shaderId}}">
+      <template repeat="{{shader in shaders}}">
+        <option value="{{shader.id}}">{{shader.shaderName}}</option>
+      </template>
+    </select>
+
+    <div style="display: block;">
+      lightPosition
+      x: <input type="number" value="{{lightPosition[0]}}">
+      y: <input type="number" value="{{lightPosition[1]}}">
+      z: <input type="number" value="{{lightPosition[2]}}"> 
+    </div>
+    
+    <div>
+      <textarea class="source" value="{{vertSource}}" cols="80" rows="20" style="float: left">
+      </textarea>
+      <textarea class="source" value="{{fragSource}}" cols="80" rows="20">
+      </textarea>
+    </div> <!-- end left -->
+  </template>
+
+  <script>
+   Polymer('cheapgl-controlpanel', {
+     lightPosition: [3.0, 3.0, -3.0],
+     modelsChanged: function() {
+       this.modelId = "torus";
+     },
+     modelIdChanged: function() {
+       var modelId = this.modelId;
+       var m = _.find(this.models, function(model) {
+         return modelId === model.id;
+       });
+       this.modelPath = m.path;
+       this.shaderId = m.defaultShader;
+     },
+     shaderIdChanged: function() {
+       var shaderId = this.shaderId;
+       var s = _.find(this.shaders, function(shader) {
+         return shaderId === shader.id;
+       });
+       this.vertShader = s.vert;
+       this.fragShader = s.frag;
+       this.image = s.image || "black.png";
+       this.imagePath = "../app/" + this.image;
+     }
+     // TODO: imagePathの設定
+     /* ,
+	imagePathChanged: function() {
+	a = document;
+	b = document._currentScript;
+	console.log(document._currentScript);
+	var el = document.querySelector("#textureImage");
+	console.log(el);
+	} */
+   });
+  </script>
+</polymer-element>

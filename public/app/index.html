@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>OpenGL風APIテスト</title>
+    <script type="text/javascript" src="../bower_components/platform/platform.js"></script>
+    <script type="text/javascript" src="../bower_components/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="../bower_components/gl-matrix/dist/gl-matrix.js"></script>
+    <script type="text/javascript" src="../bower_components/threejs/build/three.js"></script>
+    <script type="text/javascript" src="../bower_components/threex-colladaloader/ColladaLoader.js"></script>
+    <script type="text/javascript" src="../bower_components/threejs-stats/Stats.js"></script> <!-- 不要? -->
+    <script type="text/javascript" src="../bower_components/console-polyfill/index.js"></script>
+    <link rel="import" href="elements/control.html"></link>
+    <script type="text/javascript" src="../bower_components/requirejs/require.js" data-main="all"></script>
+    <style>
+     #left {
+       float: left;
+       margin-right: 3em;
+     }
+
+     #toggle-shader {
+       display: block;
+     }
+
+     #right {
+
+     }
+
+     .source {
+       font-size: small;
+     }
+
+     #display {
+       width: 800;
+       height: 600;
+       background-image:
+       linear-gradient(white, gray);
+       display: block;
+       margin-bottom: 1em;
+       /* float: left; */
+     }
+    </style>
+
+  </head>
+  <body>
+    <canvas id="display" width="640" height="480"></canvas>
+    <cheapgl-controlpanel id="controlpanel"></cheapgl-controlpanel>
+  </body>
+</html>
