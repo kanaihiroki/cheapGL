@@ -1,0 +1,8 @@
+[
+	{
+		"id": "torus",
+		"name": "トーラス",
+		"path": "torus.json",
+		"defaultShader": "normalmap"
+	}
+]
